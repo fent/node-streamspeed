@@ -1,4 +1,4 @@
-# streamspeed [![Build Status](https://secure.travis-ci.org/fent/streamspeed.png)](http://travis-ci.org/fent/streamspeed)
+# streamspeed [![Build Status](https://secure.travis-ci.org/fent/node-streamspeed.png)](http://travis-ci.org/fent/node-streamspeed)
 
 A simple way to keep track of the speed of your node streams.
 

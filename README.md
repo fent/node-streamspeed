@@ -3,6 +3,7 @@
 A simple way to keep track of the speed of your node streams.
 
 # Usage
+
 ```js
 var streamspeed = require('streamspeed');
 
@@ -24,6 +25,7 @@ ws.on('writespeed', function(speed, avg) {
 ```
 
 Keep track of even a group of streams easily.
+
 ```js
 var group = streamspeed.createGroup();
 group.add(stream1);
@@ -68,7 +70,7 @@ A group that can be used to watch several streams. Will emit `readspeed` and `wr
 ### Group#watch(stream)
 Add `stream` to group.
 
-### Group#unwatch(streram)
+### Group#unwatch(stream)
 Remove `stream` from group.
 
 

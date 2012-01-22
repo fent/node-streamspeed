@@ -1,0 +1,32 @@
+{
+  "name": "streamspeed",
+  "description": "Easily measure the speed of your streams.",
+  "keywords": ["stream", "speed"],
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fent/streamspeed.git"
+  },
+  "author": "Roly Fentanes (https://github.com/fent)",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "mocha -R spec test/*-test.js"
+
+  },
+  "directories": {
+    "lib": "./lib"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {
+    "eventyoshi": "0.1.x"
+  },
+  "devDependencies": {
+    "mocha": "0.8.x"
+  },
+  "licenses": [ {
+    "type": "MIT",
+    "url" : "http://github.com/fent/streamspeed/raw/master/LICENSE"
+  }]
+}

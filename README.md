@@ -39,6 +39,8 @@ group.on('writespeed', function(speed, avg) {
 });
 ```
 
+![example img](http://i.imgur.com/y47Sc.png)
+
 # API
 ### watch(stream, timeUnit)
 Watches `stream` for any `data` events or calls to `write` and emits the following events

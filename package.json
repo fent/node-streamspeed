@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/fent/streamspeed.git"
+    "url": "git://github.com/fent/node-streamspeed.git"
   },
   "author": "Roly Fentanes (https://github.com/fent)",
   "main": "./lib/index.js",
@@ -27,6 +27,6 @@
   },
   "licenses": [ {
     "type": "MIT",
-    "url" : "http://github.com/fent/streamspeed/raw/master/LICENSE"
+    "url" : "http://github.com/fent/node-streamspeed/raw/master/LICENSE"
   }]
 }

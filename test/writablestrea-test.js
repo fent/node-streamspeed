@@ -22,16 +22,16 @@ describe('Write to a stream', function() {
     });
 
     ws.on('end', function() {
-      assert.ok(1 <= m <= 5);
+      assert.equal(m, 1);
       done();
     });
   });
 
   it('Calculates correct ending write speed', function() {
-    assert.ok(450 < speed && speed < 550);
+    assert.equal(speed, 500);
   });
 
   it('Calculates correct average speed', function() {
-    assert.ok(480 < avg && avg < 520);
+    assert.equal(avg, 500);
   });
 });

@@ -49,24 +49,24 @@ describe('Read from a stream', function() {
       avg = b;
     });
 
-    it('Emited readspeed events', function(done) {
+    it('Emited one readspeed event', function(done) {
       // write at 20*400 bytes per second
       rs.emitInterval(400, 10, 100, function() {
         rs.emit('end');
       });
 
       rs.on('end', function() {
-        assert.ok(1 <= m && m <= 10);
+        assert.equal(m, 1);
         done();
       });
     });
 
     it('Calculates correct ending speed', function() {
-      assert.ok(3500 < speed && speed < 4500);
+      assert.equal(speed, 4000);
     });
 
     it('Calculates correct average speed in bytes', function() {
-      assert.ok(3800 < avg && avg < 4200);
+      assert.equal(speed, 4000);
     });
   });
 });

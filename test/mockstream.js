@@ -1,5 +1,6 @@
-var Stream = require('stream').Stream
-  , util = require('util')
+var Stream  = require('stream').Stream
+  , util    = require('util')
+  , mocknow = require('./mocknow')
 
 
 /**
@@ -32,9 +33,12 @@ Mock.prototype.write = function() {};
  */
 Mock.prototype.interval = function(n, interval, run, callback) {
   var self = this;
+  var i = 0;
+
   var iid = setInterval(function() {
+    mocknow(interval * ++i);
     run();
-    if (--n === 0) {
+    if (i === n) {
       clearInterval(iid);
       if (typeof callback === 'function') callback();
     }

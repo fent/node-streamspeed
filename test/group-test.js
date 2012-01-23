@@ -26,28 +26,25 @@ describe('Create a group and write to it', function() {
     writeavg = b;
   });
 
-  it('Should emit events total number of times written to', function(done) {
+  it('Should emit readspeed event once for each stream', function(done) {
     // emit to first 2 streams first fast then slow
-    s1.emitInterval(100, 5, 200, function() {
-      s1.emit('end');
-    });
-    s2.emitInterval(100, 3, 150);
+    // read at 500 B/s on 2 streams, so 1000 B/s
+    s1.emitInterval(100, 6, 200);
+    s2.emitInterval(100, 6, 200);
 
-    // write once with third stream
-    s3.writeInterval(2000, 2, 200);
-
-    group.on('end', function() {
-      assert.equal(readm, 7);
+    // write twice with third stream
+    s3.writeInterval(2000, 2, 600, function() {
+      assert.equal(readm, 2);
       done();
     });
   });
 
-  it('Should have read speed at about 500 bps', function() {
-    assert.ok(450 < readspeed && readspeed < 550);
+  it('Should have read speed at 1000 B/s', function() {
+    assert.equal(readspeed, 1000);
   });
 
-  it('Should have average read speed of about 1000 bps', function() {
-    assert.ok(800 < readavg && readavg < 1200, readavg);
+  it('Should have average read speed of 1000 B/s', function() {
+    assert.equal(readavg, 1000);
   });
 
   it('Emitted writespeed event only once', function() {
@@ -55,7 +52,7 @@ describe('Create a group and write to it', function() {
   });
 
   it('Speed written to and average should match the one case', function() {
-    assert.ok(9800 < writespeed && writespeed < 10200, writespeed);
-    assert.ok(9800 < writeavg && writeavg < 10200, writeavg);
+    assert.equal(writespeed, 3333);
+    assert.equal(writeavg, 3333);
   });
 });

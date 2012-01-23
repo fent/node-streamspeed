@@ -53,7 +53,7 @@ Watches `stream` for any `data` events or calls to `write` and emits the followi
 The events will be emitted before the 2nd `data` event or call to `write()`. And after the 2nd time, will only be emitted if there is a change to `speed` or `avgSpeed`. `timeUnit` defaults to 1000 for 1 second. Can be used to get the speed at a different time rate like 1 for `speed` per millisecond.
 
 ### unwatch(stream)
-Unwatches `stream`. Stops emitting speed events.
+Unwatches `stream`. Stops emitting speed events. `unwatch` will be called on a watched stream if it emits an `end` or `error` event, on both individual streams and groups.
 
 ### toHuman(bytes, timeUnit)
 Convenient method to convert `bytes` to a human readable string.

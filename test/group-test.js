@@ -29,11 +29,14 @@ describe('Create a group and write to it', function() {
   it('Should emit readspeed event once for each stream', function(done) {
     // emit to first 2 streams first fast then slow
     // read at 500 B/s on 2 streams, so 1000 B/s
-    s1.emitInterval(100, 6, 200);
-    s2.emitInterval(100, 6, 200);
+    s1.emitInterval(100, 6, 200, function() { s1.emit('end'); });
+    s2.emitInterval(100, 6, 200, function() { s2.emit('error', 'no!'); });
 
     // write twice with third stream
     s3.writeInterval(2000, 2, 600, function() {
+      assert.equal(group._streams.length, 1);
+      s3.emit('end');
+      assert.equal(group._streams.length, 0);
       assert.equal(readm, 2);
       done();
     });

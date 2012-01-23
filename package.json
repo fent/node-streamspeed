@@ -19,9 +19,6 @@
   "engines": {
     "node": "*"
   },
-  "dependencies": {
-    "eventyoshi": "0.1.x"
-  },
   "devDependencies": {
     "mocha": "0.8.x"
   },

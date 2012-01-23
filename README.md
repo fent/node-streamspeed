@@ -73,6 +73,9 @@ Add `stream` to group.
 ### Group#unwatch(stream)
 Remove `stream` from group.
 
+### Group#getStreams()
+Convenient method that returns a list of all streams in the group.
+
 
 # Install
 

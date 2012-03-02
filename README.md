@@ -47,7 +47,7 @@ group.on('writespeed', function(speed, avg) {
 ### watch(stream, timeUnit)
 Watches `stream` for any `data` events or calls to `write` and emits the following events
 
-* 'readinfo' `function (speed, avgSpeed) { }`
+* 'readspeed' `function (speed, avgSpeed) { }`
 * 'writespeed' `function (speed, avgSpeed) { }`
 
 The events will be emitted before the 2nd `data` event or call to `write()`. And after the 2nd time, will only be emitted if there is a change to `speed` or `avgSpeed`. `timeUnit` defaults to 1000 for 1 second. Can be used to get the speed at a different time rate like 1 for `speed` per millisecond.

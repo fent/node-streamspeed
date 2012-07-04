@@ -33,7 +33,7 @@ describe('Create a group and write to it', function() {
     s2.emitInterval(100, 6, 200, function() { s2.emit('error', 'no!'); });
 
     // write twice with third stream
-    s3.writeInterval(2000, 2, 600, function() {
+    s3.writeInterval(2000, 3, 600, function() {
       assert.equal(group._streams.length, 1);
       s3.emit('end');
       assert.equal(group._streams.length, 0);

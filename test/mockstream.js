@@ -40,7 +40,7 @@ Mock.prototype.interval = function(n, interval, run, callback) {
     run();
     if (i === n) {
       clearInterval(iid);
-      if (typeof callback === 'function') callback();
+      if (typeof callback === 'function') process.nextTick(callback);
     }
   }, interval);
 };
@@ -48,8 +48,8 @@ Mock.prototype.interval = function(n, interval, run, callback) {
 
 /**
  * Emits fixed length `data` events n times in an interval
+ * @param (number) length
  * @param (number) n
- * @param (number) times
  * @param (number) interval
  * @param (function) callback
  */

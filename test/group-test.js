@@ -15,7 +15,6 @@ describe('Create a group and write to it', function() {
 
   var speed, avg, n = 0;
   group.on('speed', function(a, b) {
-    console.log('speed', a, b);
     n++;
     speed = a;
     avg = b;
@@ -27,7 +26,6 @@ describe('Create a group and write to it', function() {
     s1.interval(100, 6, 200, s1.end.bind(s1));
     s2.interval(100, 6, 200, s2.end.bind(s2));
     s2.on('finish', function() {
-      console.log('finish');
       done();
     });
   });
@@ -40,4 +38,3 @@ describe('Create a group and write to it', function() {
     assert.equal(avg, 1000);
   });
 });
-process.on('uncaughtException', console.log);

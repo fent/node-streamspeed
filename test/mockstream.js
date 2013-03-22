@@ -34,7 +34,6 @@ Mock.prototype.interval = function(length, n, interval, callback) {
     self.write(new Buffer(length));
     if (i === n) {
       clearInterval(iid);
-      console.log('finish interval');
       if (typeof callback === 'function') process.nextTick(callback);
     }
   }, interval);

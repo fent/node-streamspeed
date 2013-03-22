@@ -1,21 +1,14 @@
 /**
- * Mocks the `Date.now()` function.
- * @param (number) n The number that the next call to `Date.now` returns.
+ * Mocks the `Date.now()` function so that it returns the an exact value.
+ * This is used because normally it can be about 4ms off and tests
+ * need exact values.
+ *
+ * @param {Number} n The number that the next call to `Date.now` returns.
  */
 var original = Date.now;
-module.exports = function(times_args) {
-  var rs = Array.prototype.slice.call(arguments)
-    , i = 0
-    , now = Date.now()
-
-  Date.now = function() {
-    var n = rs[i++];
-    if (i === rs.length) Date.now = original;
-    return n + now;
-  }
-};
 module.exports = function(n) {
   Date.now = function() {
+    console.log('mock now');
     Date.now = original;
     return n;
   };

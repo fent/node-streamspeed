@@ -23,9 +23,10 @@ util.inherits(Mock, PassThrough);
  * @param {Number} length
  * @param {Number} n
  * @param {Number} interval
- * @param {Function} callback
+ * @param {Function|Boolean} callback
  */
 Mock.prototype.interval = function(length, n, interval, callback) {
+  callback = callback || this.end.bind(this);
   var self = this;
   var i = 0;
 
@@ -34,7 +35,7 @@ Mock.prototype.interval = function(length, n, interval, callback) {
     self.write(new Buffer(length));
     if (i === n) {
       clearInterval(iid);
-      if (typeof callback === 'function') process.nextTick(callback);
+      process.nextTick(callback);
     }
   }, interval);
 };

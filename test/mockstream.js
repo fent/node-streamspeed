@@ -1,76 +1,41 @@
-var Stream  = require('stream').Stream
-  , util    = require('util')
-  , mocknow = require('./mocknow')
+var PassThrough = require('readable-stream').PassThrough;
+var util        = require('util');
+var mocknow     = require('./mocknow');
 
 
 /**
- * Mock a readable/writable stream for testing
+ * Mock a readable/writable stream for testing.
+ *
  * @constructor
- * @extends (Stream)
+ * @extends {PassThrough}
  */
 var Mock = module.exports = function() {
-  Stream.call(this);
-  this.readable = true;
-  this.writable = true;
+  PassThrough.call(this);
 };
 
-util.inherits(Mock, Stream);
-
-
-/**
- * Filler function
- */
-Mock.prototype.write = function() {};
+util.inherits(Mock, PassThrough);
 
 
 /**
  * Runs the function run n times every interval.
  * Calls callback when finished calling it n times.
- * @param (number) n
- * @param (number) interval
- * @param (function) run
- * @param (function) callback
+ *
+ * @param {Number} length
+ * @param {Number} n
+ * @param {Number} interval
+ * @param {Function} callback
  */
-Mock.prototype.interval = function(n, interval, run, callback) {
+Mock.prototype.interval = function(length, n, interval, callback) {
   var self = this;
   var i = 0;
 
   var iid = setInterval(function() {
     mocknow(interval * ++i);
-    run();
+    self.write(new Buffer(length));
     if (i === n) {
       clearInterval(iid);
+      console.log('finish interval');
       if (typeof callback === 'function') process.nextTick(callback);
     }
   }, interval);
-};
-
-
-/**
- * Emits fixed length `data` events n times in an interval
- * @param (number) length
- * @param (number) n
- * @param (number) interval
- * @param (function) callback
- */
-Mock.prototype.emitInterval = function(length, n, interval, callback) {
-  var self = this;
-  this.interval(n, interval, function() {
-    self.emit('data', new Buffer(length));
-  }, callback);
-};
-
-
-/**
- * Writes length `data` n times in an interval
- * @param (number) n
- * @param (number) times
- * @param (number) interval
- * @param (function) callback
- */
-Mock.prototype.writeInterval = function(length, n, interval, callback) {
-  var self = this;
-  this.interval(n, interval, function() {
-    self.write(new Buffer(length));
-  }, callback);
 };

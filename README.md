@@ -1,80 +1,64 @@
 # streamspeed [![Build Status](https://secure.travis-ci.org/fent/node-streamspeed.png)](http://travis-ci.org/fent/node-streamspeed)
 
-A simple way to keep track of the speed of your node streams.
+A simple way to keep track of the speed of your readable streams.
 
 # Usage
 
 ```js
-var streamspeed = require('streamspeed');
+var StreamSpeed = require('streamspeed');
 
 var rs = fs.createReadStream('somefile.avi');
-streamspeed.watch(rs);
+var ss = new StreamSpeed();
+ss.add(rs);
 
-// liten for events emitted by streamspeed
-rs.on('readspeed', function(speed, avgSpeed) {
+// Listen for events emitted by streamspeed on the given stream.
+ss.on('speed', function(speed, avgSpeed) {
   console.log('Reading at', speed, 'bytes per second');
-});
-
-var ws = fs.createWriteStream('filecopy.avi');
-streamspeed.watch(ws);
-
-ws.on('writespeed', function(speed, avg) {
-  // comes with convenient function for humans!
-  console.log('Average write speed:', streamspeed.toHuman(avg));
 });
 ```
 
 Keep track of even a group of streams easily.
 
 ```js
-var group = streamspeed.createGroup();
+var group = new Streamspeed();
 group.add(stream1);
 group.add(stream2);
 group.add(stream3);
 
-group.on('readspeed', function(speed, avg) {
+group.on('speed', function(speed, avg) {
   console.log('now reading at', speed, 'bps');
-});
-
-group.on('writespeed', function(speed, avg) {
-  console.log('now writing at', speed, 'bps');
 });
 ```
 
 ![example img](http://i.imgur.com/y47Sc.png)
 
 # API
-### watch(stream, timeUnit)
-Watches `stream` for any `data` events or calls to `write` and emits the following events
+### new StreamSpeed(timeUnit)
+A group that can be used to watch several streams. Will emit `speed` events. `timeUnit` defaults to `1000` for speed per second.
 
-* 'readspeed' `function (speed, avgSpeed) { }`
-* 'writespeed' `function (speed, avgSpeed) { }`
+### StreamSpeed#add(stream)
+Adds stream to group.
 
-The events will be emitted before the 2nd `data` event or call to `write()`. And after the 2nd time, will only be emitted if there is a change to `speed` or `avgSpeed`. `timeUnit` defaults to 1000 for 1 second. Can be used to get the speed at a different time rate like 1 for `speed` per millisecond.
+### StreamSpeed#remove(stream)
+Removes stream from group.
 
-### unwatch(stream)
-Unwatches `stream`. Stops emitting speed events. `unwatch` will be called on a watched stream if it emits an `end` or `error` event, on both individual streams and groups.
+### StreamSpeed#getStreams()
+Returns a list of all streams in the group.
 
-### toHuman(bytes, timeUnit)
+### StreamSpeed.toHuman(bytes, timeUnit)
 Convenient method to convert `bytes` to a human readable string.
 
 ```js
-streamspeed.toHuman(1500); // 1.46KB
-streamspeed.toHuman(1024 * 1024) => 1MB
-streamspeed.toHuman(1024 * 1024 * 20.5, 's') => 20.5MB/s
+StreamSpeed.toHuman(1500); // 1.46KB
+StreamSpeed.toHuman(1024 * 1024) => 1MB
+StreamSpeed.toHuman(1024 * 1024 * 20.5, 's') => 20.5MB/s
 ```
 
-### Group(timeUnit)
-A group that can be used to watch several streams. Will emit `readspeed` and `writespeed`.
+### Event: 'speed'
+* `Number` - Speed at which streams in the group are being read.
+* `Number` - Average speed.
 
-### Group#watch(stream)
-Add `stream` to group.
-
-### Group#unwatch(stream)
-Remove `stream` from group.
-
-### Group#getStreams()
-Convenient method that returns a list of all streams in the group.
+Will be emitted after the second time a stream is read and only if there is a change in speed.
 
 
 # Install

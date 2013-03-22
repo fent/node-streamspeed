@@ -16,7 +16,7 @@ describe('Immediately remove a stream', function() {
   });
 
   it('Does not emit any events', function(done) {
-    s.on('end', function() {
+    s.on('finish', function() {
       assert.equal(n, 0);
       done();
     });
@@ -49,7 +49,7 @@ describe('Unwatch after several writes', function() {
       s.end();
     });
 
-    s.on('end', function() {
+    s.on('finish', function() {
       assert.ok(1 <= m <= 5);
       done();
     });

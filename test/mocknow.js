@@ -8,7 +8,6 @@
 var original = Date.now;
 module.exports = function(n) {
   Date.now = function() {
-    console.log('mock now');
     Date.now = original;
     return n;
   };

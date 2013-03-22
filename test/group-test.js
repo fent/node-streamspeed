@@ -23,8 +23,8 @@ describe('Create a group and write to it', function() {
   it('Should emit `speed` event once for each stream', function(done) {
     // Emit to first 2 streams first fast then slow
     // read at 500 B/s on 2 streams, so 1000 B/s.
-    s1.interval(100, 6, 200, s1.end.bind(s1));
-    s2.interval(100, 6, 200, s2.end.bind(s2));
+    s1.interval(100, 6, 200);
+    s2.interval(100, 6, 200);
     s2.on('finish', function() {
       done();
     });

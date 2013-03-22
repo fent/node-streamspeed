@@ -11,7 +11,6 @@
   "main": "./lib/index.js",
   "scripts": {
     "test": "mocha -R spec test/*-test.js"
-
   },
   "directories": {
     "lib": "./lib"

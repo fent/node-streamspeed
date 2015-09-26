@@ -1,8 +1,11 @@
 {
   "name": "streamspeed",
   "description": "Easily measure the speed of your streams.",
-  "keywords": ["stream", "speed"],
-  "version": "0.2.0",
+  "keywords": [
+    "stream",
+    "speed"
+  ],
+  "version": "0.2.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/fent/node-streamspeed.git"
@@ -18,8 +21,10 @@
   "devDependencies": {
     "mocha": "x"
   },
-  "licenses": [ {
-    "type": "MIT",
-    "url" : "http://github.com/fent/node-streamspeed/raw/master/LICENSE"
-  }]
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/fent/node-streamspeed/raw/master/LICENSE"
+    }
+  ]
 }

@@ -1,4 +1,4 @@
-var PassThrough = require('readable-stream').PassThrough;
+var PassThrough = require('stream').PassThrough;
 var util        = require('util');
 var mocknow     = require('./mocknow');
 

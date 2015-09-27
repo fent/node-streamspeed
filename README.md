@@ -1,6 +1,8 @@
-# streamspeed [![Build Status](https://secure.travis-ci.org/fent/node-streamspeed.png)](http://travis-ci.org/fent/node-streamspeed)
+# streamspeed
 
 A simple way to keep track of the speed of your readable streams.
+
+[![Build Status](https://secure.travis-ci.org/fent/node-streamspeed.png)](http://travis-ci.org/fent/node-streamspeed) [![Dependency Status](https://gemnasium.com/fent/node-streamspeed.svg)](https://gemnasium.com/fent/node-streamspeed)
 
 # Usage
 

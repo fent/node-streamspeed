@@ -49,6 +49,12 @@ Removes stream from group.
 ### StreamSpeed#getStreams()
 Returns a list of all streams in the group.
 
+### StreamSpeed#speed
+Curent speed.
+
+### StreamSpeed#avg
+Current average speed.
+
 ### StreamSpeed.toHuman(bytes, timeUnit)
 Convenient method to convert `bytes` to a human readable string.
 

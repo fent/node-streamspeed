@@ -20,7 +20,8 @@
   },
   "devDependencies": {
     "istanbul": "*",
-    "mocha": "*"
+    "mocha": "*",
+    "sinon": "^1.17.6"
   },
   "licenses": [
     {

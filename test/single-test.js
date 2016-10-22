@@ -16,7 +16,7 @@ describe('Read from a stream', function() {
       avg = b;
     });
 
-    it('Only emitted one readspeed event', function(done) {
+    it('Only emitted one speed event', function(done) {
       // Write data of length 100 5 times to stream
       // at a speed of 1 byte per ms.
       rs.interval(100, 3, 100);

@@ -1,6 +1,7 @@
 var StreamSpeed = require('..');
-var MockStream = require('./mockstream');
-var assert = require('assert');
+var MockStream  = require('./mockstream');
+var assert      = require('assert');
+var sinon       = require('sinon');
 
 
 describe('Create a group and write to it', function() {
@@ -13,28 +14,18 @@ describe('Create a group and write to it', function() {
   group.add(s2);
   group.add(s3);
 
-  var speed, avg, n = 0;
-  group.on('speed', function(a, b) {
-    n++;
-    speed = a;
-    avg = b;
-  });
+  var spy = sinon.spy();
+  group.on('speed', spy);
 
   it('Should emit `speed` event once for each stream', function(done) {
     // Emit to first 2 streams first fast then slow
     // read at 500 B/s on 2 streams, so 1000 B/s.
     s1.interval(100, 6, 200);
     s2.interval(100, 6, 200);
-    s2.on('finish', function() {
-      done();
-    });
+    s2.on('finish', done);
   });
 
-  it('Should have speed at 1000 B/s', function() {
-    assert.equal(speed, 1000);
-  });
-
-  it('Should have average speed of 1000 B/s', function() {
-    assert.equal(avg, 1000);
+  it('Should have speed  and avg speed at 1000 B/s', function() {
+    assert.ok(spy.calledWith(1000, 1000));
   });
 });

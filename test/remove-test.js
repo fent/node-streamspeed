@@ -1,6 +1,7 @@
 var StreamSpeed = require('..');
 var MockStream  = require('./mockstream');
 var assert      = require('assert');
+var sinon       = require('sinon');
 
 
 describe('Immediately remove a stream', function() {
@@ -10,14 +11,12 @@ describe('Immediately remove a stream', function() {
   ss.remove(s);
 
   // Listen for things.
-  var n = 0;
-  s.on('speed', function() {
-    n++;
-  });
+  var spy = sinon.spy();
+  s.on('speed', spy);
 
   it('Does not emit any events', function(done) {
     s.on('finish', function() {
-      assert.equal(n, 0);
+      assert.ok(!spy.called);
       done();
     });
 
@@ -35,11 +34,8 @@ describe('Unwatch after several writes', function() {
   var s = new MockStream();
   ss.add(s);
 
-  var speed, avg, m = 0;
-  ss.on('speed', function(a, b) {
-    speed = a;
-    avg = b;
-  });
+  var spy = sinon.spy();
+  ss.on('speed', spy);
 
   it('Emits no events after calling remove', function(done) {
     // Write at 1 bps for 0.5 seconds.
@@ -49,18 +45,10 @@ describe('Unwatch after several writes', function() {
       s.end();
     });
 
-    s.on('finish', function() {
-      assert.ok(1 <= m <= 5);
-      done();
-    });
+    s.on('finish', done);
   });
 
-  it('Calculates speed that is not over 1 bps', function() {
-    assert.equal(speed, 1);
+  it('Speed that is not over 1 bps, and avg not affected', function() {
+    assert.ok(spy.calledWith(1, 1));
   });
-
-  it('Calculates average speed not affected by speed spike after removing',
-     function() {
-       assert.equal(avg, 1);
-     });
 });

@@ -1,6 +1,7 @@
 var StreamSpeed = require('..');
 var MockStream  = require('./mockstream');
 var assert      = require('assert');
+var sinon       = require('sinon');
 
 
 describe('Read from a stream', function() {
@@ -9,30 +10,22 @@ describe('Read from a stream', function() {
     var rs = new MockStream();
     ss.add(rs);
 
-    var speed, avg, m = 0;
-    ss.on('speed', function(a, b) {
-      m++;
-      speed = a;
-      avg = b;
-    });
+    var spy = sinon.spy();
+    ss.on('speed', spy);
 
     it('Only emitted one speed event', function(done) {
-      // Write data of length 100 5 times to stream
+      // Write data of length 100 3 times to stream
       // at a speed of 1 byte per ms.
       rs.interval(100, 3, 100);
 
       rs.on('end', function() {
-        assert.equal(m, 1);
+        assert.ok(spy.calledOnce);
         done();
       });
     });
 
-    it('Calculates correct ending speed in bytes', function() {
-      assert.equal(speed, 1);
-    });
-
-    it('Calculates correct average speed in bytes', function() {
-      assert.equal(avg, 1);
+    it('Calculates correct ending speed, and avg speed in bytes', function() {
+      assert.ok(spy.calledWith(1, 1));
     });
 
   });
@@ -42,29 +35,21 @@ describe('Read from a stream', function() {
     var rs = new MockStream();
     ss.add(rs);
 
-    var speed, avg, m = 0;
-    ss.on('speed', function(a, b) {
-      m++;
-      speed = a;
-      avg = b;
-    });
+    var spy = sinon.spy();
+    ss.on('speed', spy);
 
     it('Emited one readspeed event', function(done) {
-      // Write at 20*400 bytes per second.
+      // Write at 10*400 bytes per second.
       rs.interval(400, 10, 100);
 
       rs.on('end', function() {
-        assert.equal(m, 1);
+        assert.ok(spy.calledOnce);
         done();
       });
     });
 
-    it('Calculates correct ending speed', function() {
-      assert.equal(speed, 4000);
-    });
-
-    it('Calculates correct average speed in bytes', function() {
-      assert.equal(speed, 4000);
+    it('Calculates correct ending speed and avg speed', function() {
+      assert.ok(spy.calledWith(4000, 4000));
     });
   });
 });

@@ -17,6 +17,18 @@ describe('Create a group and write to it', function() {
   var spy = sinon.spy();
   group.on('speed', spy);
 
+  it('All streams added show up', function() {
+    assert.equal(group.getStreams().length, 3);
+  });
+
+  describe('Try adding the same stream again', function() {
+    it('Throws error', function() {
+      assert.throws(function() {
+        group.add(s3);
+      }, /already in group/);
+    });
+  });
+
   it('Should emit `speed` event once for each stream', function(done) {
     // Emit to first 2 streams first fast then slow
     // read at 500 B/s on 2 streams, so 1000 B/s.
@@ -27,5 +39,9 @@ describe('Create a group and write to it', function() {
 
   it('Should have speed  and avg speed at 1000 B/s', function() {
     assert.ok(spy.calledWith(1000, 1000));
+  });
+
+  it('Should remove a stream when it ends', function() {
+    assert.equal(group.getStreams().length, 1);
   });
 });

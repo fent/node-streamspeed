@@ -75,7 +75,7 @@ describe('Read from a stream', function() {
 
 describe('Read when stream speed is sporadic', function() {
   var ss = new StreamSpeed();
-  var rs = new MockStream();
+  var rs = new PassThrough();
   ss.add(rs);
 
   var spy = sinon.spy();
@@ -89,5 +89,16 @@ describe('Read when stream speed is sporadic', function() {
     rs.end();
     assert.ok(spy.firstCall.calledWith(100000, 100000));
     assert.ok(spy.secondCall.calledWith(200000, 150000));
+  });
+});
+
+describe('Stream being monitored has an error', function() {
+  it('Stream gets removed', function() {
+    var ss = new StreamSpeed();
+    var rs = new PassThrough();
+    rs.on('error', function() {});
+    ss.add(rs);
+    rs.emit('error', new Error('my error'));
+    assert.equal(ss.getStreams().length, 0);
   });
 });

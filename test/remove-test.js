@@ -1,12 +1,13 @@
 var StreamSpeed = require('..');
 var MockStream  = require('./mockstream');
+var PassThrough = require('stream').PassThrough;
 var assert      = require('assert');
 var sinon       = require('sinon');
 
 
 describe('Immediately remove a stream', function() {
   var ss = new StreamSpeed();
-  var s = new MockStream();
+  var s = new PassThrough();
   ss.add(s);
   ss.remove(s);
 
@@ -50,5 +51,13 @@ describe('Unwatch after several writes', function() {
 
   it('Speed that is not over 1 bps, and avg not affected', function() {
     assert.ok(spy.calledWith(1, 1));
+  });
+
+  describe('Try removing stream again', function() {
+    it('Throws error', function() {
+      assert.throws(function() {
+        ss.remove(s);
+      }, /not found/);
+    });
   });
 });

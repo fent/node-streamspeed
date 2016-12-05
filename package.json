@@ -23,10 +23,5 @@
     "mocha": "*",
     "sinon": "^1.17.6"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://github.com/fent/node-streamspeed/raw/master/LICENSE"
-    }
-  ]
+  "license": "MIT"
 }

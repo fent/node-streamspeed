@@ -23,5 +23,6 @@
     "mocha": "*",
     "sinon": "^1.17.6"
   },
+  "engines": { "node": ">=0.12" },
   "license": "MIT"
 }

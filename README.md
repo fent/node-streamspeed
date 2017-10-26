@@ -9,14 +9,14 @@ A simple way to keep track of the speed of your readable streams.
 # Usage
 
 ```js
-var StreamSpeed = require('streamspeed');
+const StreamSpeed = require('streamspeed');
 
 var rs = fs.createReadStream('somefile.avi');
 var ss = new StreamSpeed();
 ss.add(rs);
 
 // Listen for events emitted by streamspeed on the given stream.
-ss.on('speed', function(speed, avgSpeed) {
+ss.on('speed', (speed, avgSpeed) => {
   console.log('Reading at', speed, 'bytes per second');
 });
 ```
@@ -29,7 +29,7 @@ group.add(stream1);
 group.add(stream2);
 group.add(stream3);
 
-group.on('speed', function(speed, avg) {
+group.on('speed', (speed, avg) => {
   console.log('now reading at', speed, 'bps');
 });
 ```

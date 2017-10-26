@@ -1,45 +1,45 @@
-var PassThrough = require('stream').PassThrough;
-var util        = require('util');
-var sinon       = require('sinon');
+'use strict';
+
+const PassThrough = require('stream').PassThrough;
+const sinon       = require('sinon');
 
 var clock;
-before(function() { clock = sinon.useFakeTimers(); });
-after(function() { clock.restore(); });
+before(() => { clock = sinon.useFakeTimers(); });
+after(() => { clock.restore(); });
 
 
-/**
- * Mock a readable/writable stream for testing.
- *
- * @constructor
- * @extends {PassThrough}
- */
-var Mock = module.exports = function() {
-  PassThrough.call(this);
-};
+module.exports = class Mock extends PassThrough {
+  /**
+   * Mock a readable/writable stream for testing.
+   *
+   * @constructor
+   * @extends {PassThrough}
+   */
+  constructor() {
+    super();
+  }
 
-util.inherits(Mock, PassThrough);
 
+  /**
+   * Runs the function run n times every interval.
+   *
+   * @param {Number} length
+   * @param {Number} n
+   * @param {Number} interval
+   */
+  interval(length, n, interval) {
+    var callback = this.end.bind(this);
+    var i = 0;
 
-/**
- * Runs the function run n times every interval.
- *
- * @param {Number} length
- * @param {Number} n
- * @param {Number} interval
- */
-Mock.prototype.interval = function(length, n, interval) {
-  var callback = this.end.bind(this);
-  var self = this;
-  var i = 0;
-
-  var iid = setInterval(function() {
-    self.write(new Buffer(length));
-    if (++i === n) {
-      clearInterval(iid);
-      process.nextTick(callback);
-    } else {
-      clock.tick(interval);
-    }
-  }, interval);
-  clock.tick(interval);
+    var iid = setInterval(() => {
+      this.write(new Buffer(length));
+      if (++i === n) {
+        clearInterval(iid);
+        process.nextTick(callback);
+      } else {
+        clock.tick(interval);
+      }
+    }, interval);
+    clock.tick(interval);
+  }
 };

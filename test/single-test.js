@@ -1,12 +1,12 @@
-var StreamSpeed = require('..');
-var MockStream  = require('./mockstream');
-var PassThrough = require('stream').PassThrough;
-var assert      = require('assert');
-var sinon       = require('sinon');
+const StreamSpeed = require('..');
+const MockStream  = require('./mockstream');
+const PassThrough = require('stream').PassThrough;
+const assert      = require('assert');
+const sinon       = require('sinon');
 
 
-describe('Read from a stream', function() {
-  describe('with a unit', function() {
+describe('Read from a stream', () => {
+  describe('with a unit', () => {
     var ss = new StreamSpeed(1);
     var rs = new MockStream();
     ss.add(rs);
@@ -14,24 +14,24 @@ describe('Read from a stream', function() {
     var spy = sinon.spy();
     ss.on('speed', spy);
 
-    it('Emitted one speed event', function(done) {
+    it('Emitted one speed event', (done) => {
       // Write data of length 100 3 times to stream
       // at a speed of 1 byte per ms.
       rs.interval(100, 3, 100);
 
-      rs.on('end', function() {
+      rs.on('end', () => {
         assert.ok(spy.calledOnce);
         done();
       });
     });
 
-    it('Calculates correct ending speed and avg speed in bytes', function() {
+    it('Calculates correct ending speed and avg speed in bytes', () => {
       assert.ok(spy.calledWith(1, 1));
     });
 
   });
 
-  describe('with no unit', function() {
+  describe('with no unit', () => {
     var ss = new StreamSpeed();
     var rs = new MockStream();
     ss.add(rs);
@@ -39,22 +39,22 @@ describe('Read from a stream', function() {
     var spy = sinon.spy();
     ss.on('speed', spy);
 
-    it('Emited one speed event', function(done) {
+    it('Emited one speed event', (done) => {
       // Write at 10*400 bytes per second.
       rs.interval(400, 10, 100);
 
-      rs.on('end', function() {
+      rs.on('end', () => {
         assert.ok(spy.calledOnce);
         done();
       });
     });
 
-    it('Calculates correct ending speed and avg speed', function() {
+    it('Calculates correct ending speed and avg speed', () => {
       assert.ok(spy.calledWith(4000, 4000));
     });
   });
 
-  describe('Written to at the rate of the unit', function() {
+  describe('Written to at the rate of the unit', () => {
     var ss = new StreamSpeed(100);
     var rs = new MockStream();
     ss.add(rs);
@@ -62,8 +62,8 @@ describe('Read from a stream', function() {
     var spy = sinon.spy();
     ss.on('speed', spy);
 
-    it('Speed and avg speed are constant', function(done) {
-      rs.on('end', function() {
+    it('Speed and avg speed are constant', (done) => {
+      rs.on('end', () => {
         assert.ok(spy.calledOnce);
         assert.ok(spy.firstCall.calledWith(400, 400));
         done();
@@ -73,7 +73,7 @@ describe('Read from a stream', function() {
   });
 });
 
-describe('Read when stream speed is sporadic', function() {
+describe('Read when stream speed is sporadic', () => {
   var ss = new StreamSpeed();
   var rs = new PassThrough();
   ss.add(rs);
@@ -81,7 +81,7 @@ describe('Read when stream speed is sporadic', function() {
   var spy = sinon.spy();
   ss.on('speed', spy);
 
-  it('Speed and avg speed changes', function() {
+  it('Speed and avg speed changes', () => {
     rs.write(new Buffer(100));
     rs.write(new Buffer(100));
     rs.write(new Buffer(200));
@@ -92,11 +92,11 @@ describe('Read when stream speed is sporadic', function() {
   });
 });
 
-describe('Stream being monitored has an error', function() {
-  it('Stream gets removed', function() {
+describe('Stream being monitored has an error', () => {
+  it('Stream gets removed', () => {
     var ss = new StreamSpeed();
     var rs = new PassThrough();
-    rs.on('error', function() {});
+    rs.on('error', () => {});
     ss.add(rs);
     rs.emit('error', new Error('my error'));
     assert.equal(ss.getStreams().length, 0);

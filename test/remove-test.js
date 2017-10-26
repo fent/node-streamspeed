@@ -1,11 +1,11 @@
-var StreamSpeed = require('..');
-var MockStream  = require('./mockstream');
-var PassThrough = require('stream').PassThrough;
-var assert      = require('assert');
-var sinon       = require('sinon');
+const StreamSpeed = require('..');
+const MockStream  = require('./mockstream');
+const PassThrough = require('stream').PassThrough;
+const assert      = require('assert');
+const sinon       = require('sinon');
 
 
-describe('Immediately remove a stream', function() {
+describe('Immediately remove a stream', () => {
   var ss = new StreamSpeed();
   var s = new PassThrough();
   ss.add(s);
@@ -15,8 +15,8 @@ describe('Immediately remove a stream', function() {
   var spy = sinon.spy();
   s.on('speed', spy);
 
-  it('Does not emit any events', function(done) {
-    s.on('finish', function() {
+  it('Does not emit any events', (done) => {
+    s.on('finish', () => {
       assert.ok(!spy.called);
       done();
     });
@@ -30,7 +30,7 @@ describe('Immediately remove a stream', function() {
 });
 
 
-describe('Unwatch after several writes', function() {
+describe('Unwatch after several writes', () => {
   var ss = new StreamSpeed(1);
   var s = new MockStream();
   ss.add(s);
@@ -38,9 +38,9 @@ describe('Unwatch after several writes', function() {
   var spy = sinon.spy();
   ss.on('speed', spy);
 
-  it('Emits no events after calling remove', function(done) {
+  it('Emits no events after calling remove', (done) => {
     // Write at 1 bps for 0.5 seconds.
-    s.interval(100, 5, 100, function() {
+    s.interval(100, 5, 100, () => {
       ss.remove(s);
       s.write(new Buffer(20000));
       s.end();
@@ -49,13 +49,13 @@ describe('Unwatch after several writes', function() {
     s.on('finish', done);
   });
 
-  it('Speed that is not over 1 bps, and avg not affected', function() {
+  it('Speed that is not over 1 bps, and avg not affected', () => {
     assert.ok(spy.calledWith(1, 1));
   });
 
-  describe('Try removing stream again', function() {
-    it('Throws error', function() {
-      assert.throws(function() {
+  describe('Try removing stream again', () => {
+    it('Throws error', () => {
+      assert.throws(() => {
         ss.remove(s);
       }, /not found/);
     });

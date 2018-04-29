@@ -17,7 +17,7 @@ describe('Read from a stream', () => {
     it('Emitted one speed event', (done) => {
       // Write data of length 100 3 times to stream
       // at a speed of 1 byte per ms.
-      rs.interval(100, 3, 100);
+      rs.interval(100, 3, 100, true);
 
       rs.on('end', () => {
         assert.ok(spy.calledOnce);
@@ -41,7 +41,7 @@ describe('Read from a stream', () => {
 
     it('Emited one speed event', (done) => {
       // Write at 10*400 bytes per second.
-      rs.interval(400, 10, 100);
+      rs.interval(400, 10, 100, true);
 
       rs.on('end', () => {
         assert.ok(spy.calledOnce);
@@ -68,27 +68,28 @@ describe('Read from a stream', () => {
         assert.ok(spy.firstCall.calledWith(400, 400));
         done();
       });
-      rs.interval(400, 10, 100);
+      rs.interval(400, 10, 100, true);
     });
   });
 });
 
 describe('Read when stream speed is sporadic', () => {
   var ss = new StreamSpeed();
-  var rs = new PassThrough();
+  var rs = new MockStream();
   ss.add(rs);
 
   var spy = sinon.spy();
   ss.on('speed', spy);
 
   it('Speed and avg speed changes', () => {
-    rs.write(new Buffer(100));
-    rs.write(new Buffer(100));
-    rs.write(new Buffer(200));
-    rs.write(new Buffer(200));
-    rs.end();
-    assert.ok(spy.firstCall.calledWith(100000, 100000));
-    assert.ok(spy.secondCall.calledWith(200000, 150000));
+    rs.interval(100, 2, 100, false);
+    setTimeout(() => {
+      rs.interval(200, 2, 100, true);
+    }, 200);
+    rs.on('end', () => {
+      assert.ok(spy.firstCall.calledWith(1000, 1000));
+      assert.ok(spy.secondCall.calledWith(2000, 1500));
+    });
   });
 });
 

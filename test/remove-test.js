@@ -22,8 +22,8 @@ describe('Immediately remove a stream', () => {
     });
 
     // Write to it.
-    s.write(new Buffer(100));
-    s.write(new Buffer(200));
+    s.write(Buffer.alloc(100));
+    s.write(Buffer.alloc(200));
     s.end();
 
   });
@@ -40,11 +40,7 @@ describe('Unwatch after several writes', () => {
 
   it('Emits no events after calling remove', (done) => {
     // Write at 1 bps for 0.5 seconds.
-    s.interval(100, 5, 100, () => {
-      ss.remove(s);
-      s.write(new Buffer(20000));
-      s.end();
-    });
+    s.interval(100, 5, 100, true);
 
     s.on('finish', done);
   });

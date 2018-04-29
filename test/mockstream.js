@@ -26,20 +26,26 @@ module.exports = class Mock extends PassThrough {
    * @param {Number} length
    * @param {Number} n
    * @param {Number} interval
+   * @param {Boolean} end
+   * @param {Boolean} skipTick
    */
-  interval(length, n, interval) {
+  interval(length, n, interval, end, skipTick) {
     var callback = this.end.bind(this);
     var i = 0;
 
     var iid = setInterval(() => {
-      this.write(new Buffer(length));
+      this.write(Buffer.alloc(length));
       if (++i === n) {
         clearInterval(iid);
-        process.nextTick(callback);
-      } else {
-        clock.tick(interval);
+        if (end) {
+          process.nextTick(callback);
+        }
+      } else if (!skipTick) {
+        process.nextTick(clock.tick.bind(clock, interval));
       }
     }, interval);
-    clock.tick(interval);
+    if (!skipTick) {
+      process.nextTick(clock.tick.bind(clock, interval));
+    }
   }
 };

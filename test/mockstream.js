@@ -1,5 +1,3 @@
-'use strict';
-
 const PassThrough = require('stream').PassThrough;
 const sinon       = require('sinon');
 

@@ -11,8 +11,8 @@ A simple way to keep track of the speed of your readable streams.
 ```js
 const StreamSpeed = require('streamspeed');
 
-var rs = fs.createReadStream('somefile.avi');
-var ss = new StreamSpeed();
+let rs = fs.createReadStream('somefile.avi');
+let ss = new StreamSpeed();
 ss.add(rs);
 
 // Listen for events emitted by streamspeed on the given stream.
@@ -24,7 +24,7 @@ ss.on('speed', (speed, avgSpeed) => {
 Keep track of even a group of streams easily.
 
 ```js
-var group = new Streamspeed();
+let group = new Streamspeed();
 group.add(stream1);
 group.add(stream2);
 group.add(stream3);
@@ -65,8 +65,8 @@ StreamSpeed.toHuman(1024 * 1024 * 20.5, 's') => 20.5MB/s
 ```
 
 ### Event: 'speed'
-* `Number` - Speed at which streams in the group are being read.
-* `Number` - Average speed.
+* `number` - Speed at which streams in the group are being read.
+* `number` - Average speed.
 
 Will be emitted after the second time a stream is read and only if there is a change in speed.
 

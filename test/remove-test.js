@@ -6,13 +6,13 @@ const sinon       = require('sinon');
 
 
 describe('Immediately remove a stream', () => {
-  var ss = new StreamSpeed();
-  var s = new PassThrough();
+  const ss = new StreamSpeed();
+  const s = new PassThrough();
   ss.add(s);
   ss.remove(s);
 
   // Listen for things.
-  var spy = sinon.spy();
+  const spy = sinon.spy();
   s.on('speed', spy);
 
   it('Does not emit any events', (done) => {
@@ -31,17 +31,16 @@ describe('Immediately remove a stream', () => {
 
 
 describe('Unwatch after several writes', () => {
-  var ss = new StreamSpeed(1);
-  var s = new MockStream();
+  const ss = new StreamSpeed(1);
+  const s = new MockStream();
   ss.add(s);
 
-  var spy = sinon.spy();
+  const spy = sinon.spy();
   ss.on('speed', spy);
 
   it('Emits no events after calling remove', (done) => {
     // Write at 1 bps for 0.5 seconds.
     s.interval(100, 5, 100, true);
-
     s.on('finish', done);
   });
 

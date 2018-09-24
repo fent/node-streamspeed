@@ -1,7 +1,7 @@
 const PassThrough = require('stream').PassThrough;
 const sinon       = require('sinon');
 
-var clock;
+let clock;
 before(() => { clock = sinon.useFakeTimers(); });
 after(() => { clock.restore(); });
 
@@ -21,17 +21,17 @@ module.exports = class Mock extends PassThrough {
   /**
    * Runs the function run n times every interval.
    *
-   * @param {Number} length
-   * @param {Number} n
-   * @param {Number} interval
-   * @param {Boolean} end
-   * @param {Boolean} skipTick
+   * @param {number} length
+   * @param {number} n
+   * @param {number} interval
+   * @param {boolean} end
+   * @param {boolean} skipTick
    */
   interval(length, n, interval, end, skipTick) {
-    var callback = this.end.bind(this);
-    var i = 0;
+    const callback = this.end.bind(this);
+    let i = 0;
 
-    var iid = setInterval(() => {
+    const iid = setInterval(() => {
       this.write(Buffer.alloc(length));
       if (++i === n) {
         clearInterval(iid);

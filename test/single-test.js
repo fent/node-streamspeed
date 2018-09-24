@@ -7,11 +7,11 @@ const sinon       = require('sinon');
 
 describe('Read from a stream', () => {
   describe('with a unit', () => {
-    var ss = new StreamSpeed(1);
-    var rs = new MockStream();
+    const ss = new StreamSpeed(1);
+    const rs = new MockStream();
     ss.add(rs);
 
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     ss.on('speed', spy);
 
     it('Emitted one speed event', (done) => {
@@ -32,11 +32,11 @@ describe('Read from a stream', () => {
   });
 
   describe('with no unit', () => {
-    var ss = new StreamSpeed();
-    var rs = new MockStream();
+    const ss = new StreamSpeed();
+    const rs = new MockStream();
     ss.add(rs);
 
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     ss.on('speed', spy);
 
     it('Emited one speed event', (done) => {
@@ -55,11 +55,11 @@ describe('Read from a stream', () => {
   });
 
   describe('Written to at the rate of the unit', () => {
-    var ss = new StreamSpeed(100);
-    var rs = new MockStream();
+    const ss = new StreamSpeed(100);
+    const rs = new MockStream();
     ss.add(rs);
 
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     ss.on('speed', spy);
 
     it('Speed and avg speed are constant', (done) => {
@@ -74,11 +74,11 @@ describe('Read from a stream', () => {
 });
 
 describe('Read when stream speed is sporadic', () => {
-  var ss = new StreamSpeed();
-  var rs = new MockStream();
+  const ss = new StreamSpeed();
+  const rs = new MockStream();
   ss.add(rs);
 
-  var spy = sinon.spy();
+  const spy = sinon.spy();
   ss.on('speed', spy);
 
   it('Speed and avg speed changes', () => {
@@ -95,11 +95,11 @@ describe('Read when stream speed is sporadic', () => {
 
 describe('Stream being monitored has an error', () => {
   it('Stream gets removed', () => {
-    var ss = new StreamSpeed();
-    var rs = new PassThrough();
+    const ss = new StreamSpeed();
+    const rs = new PassThrough();
     rs.on('error', () => {});
     ss.add(rs);
-    rs.emit('error', new Error('my error'));
+    rs.emit('error', Error('my error'));
     assert.equal(ss.getStreams().length, 0);
   });
 });

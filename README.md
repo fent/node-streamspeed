@@ -4,7 +4,7 @@ A simple way to keep track of the speed of your readable streams.
 
 [![Build Status](https://secure.travis-ci.org/fent/node-streamspeed.svg)](http://travis-ci.org/fent/node-streamspeed)
 [![Dependency Status](https://david-dm.org/fent/node-streamspeed.svg)](https://david-dm.org/fent/node-streamspeed)
-[![codecov](https://codecov.io/gh/fent/node-streamspeed/branch/master/graph/badge.svg)](https://codecov.io/gh/fent/node-streamspeed)
+[![codecov](https://codecov.io/gh/fent/node-streamspeed/branch/master/graph/badge.svg)](https://codecov.io/gh/fent/node-streamspeed) [![Greenkeeper badge](https://badges.greenkeeper.io/fent/node-streamspeed.svg)](https://greenkeeper.io/)
 
 # Usage
 

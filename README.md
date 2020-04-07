@@ -55,13 +55,14 @@ Curent speed.
 ### StreamSpeed#avg
 Current average speed.
 
-### StreamSpeed.toHuman(bytes, timeUnit)
+### StreamSpeed.toHuman(bytes, options)
 Convenient method to convert `bytes` to a human readable string.
 
 ```js
-StreamSpeed.toHuman(1500); // 1.46KB
-StreamSpeed.toHuman(1024 * 1024); // 1MB
-StreamSpeed.toHuman(1024 * 1024 * 20.5, 's'); // 20.5MB/s
+StreamSpeed.toHuman(1500);                                  // 1.46KB
+StreamSpeed.toHuman(1024 * 1024);                           // 1MB
+StreamSpeed.toHuman(1024 * 1024 * 20.5, { timeUnit: 's' }); // 20.5MB/s
+StreamSpeed.toHuman(1024 * 1024 * 20.5, { precision: 3 });   // 20.50MB
 ```
 
 ### Event: 'speed'

@@ -21,7 +21,7 @@ ss.on('speed', (speed, avgSpeed) => {
 });
 ```
 
-Keep track of even a group of streams easily.
+Keep track of a group of streams
 
 ```js
 let group = new Streamspeed();
@@ -37,7 +37,7 @@ group.on('speed', (speed, avg) => {
 ![example img](http://i.imgur.com/y47Sc.png)
 
 # API
-### new StreamSpeed(timeUnit)
+### new StreamSpeed([timeUnit])
 A group that can be used to watch several streams. Will emit `speed` events. `timeUnit` defaults to `1000` for speed per second.
 
 ### StreamSpeed#add(stream)
@@ -60,8 +60,8 @@ Convenient method to convert `bytes` to a human readable string.
 
 ```js
 StreamSpeed.toHuman(1500); // 1.46KB
-StreamSpeed.toHuman(1024 * 1024) => 1MB
-StreamSpeed.toHuman(1024 * 1024 * 20.5, 's') => 20.5MB/s
+StreamSpeed.toHuman(1024 * 1024); // 1MB
+StreamSpeed.toHuman(1024 * 1024 * 20.5, 's'); // 20.5MB/s
 ```
 
 ### Event: 'speed'

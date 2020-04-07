@@ -93,6 +93,35 @@ describe('Read when stream speed is sporadic', () => {
   });
 });
 
+describe('Data is read on the same millisecond', () => {
+  it('Speed is accurately calculated', (done) => {
+    let clock = sinon.useFakeTimers();
+    after(clock.restore);
+
+    const ss = new StreamSpeed();
+    const rs = new MockStream();
+    ss.add(rs);
+
+    const spy = sinon.spy();
+    ss.on('speed', spy);
+
+    // Write at 2*400 bytes per second.
+    setTimeout(() => {
+      rs.write(Buffer.alloc(400), () => {
+        rs.write(Buffer.alloc(400), () => {
+          process.nextTick(rs.end.bind(rs));
+        });
+      });
+    }, 100);
+    process.nextTick(clock.tick.bind(clock, 100));
+
+    rs.on('end', () => {
+      assert.ok(spy.called);
+      done();
+    });
+  });
+});
+
 describe('Stream being monitored has an error', () => {
   it('Stream gets removed', () => {
     const ss = new StreamSpeed();

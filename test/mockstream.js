@@ -6,18 +6,10 @@ before(() => { clock = sinon.useFakeTimers(); });
 after(() => { clock.restore(); });
 
 
+/**
+ * Mock a readable/writable stream for testing.
+ */
 module.exports = class Mock extends PassThrough {
-  /**
-   * Mock a readable/writable stream for testing.
-   *
-   * @constructor
-   * @extends {PassThrough}
-   */
-  constructor() {
-    super();
-  }
-
-
   /**
    * Runs the function run n times every interval.
    *

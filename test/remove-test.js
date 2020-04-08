@@ -6,16 +6,16 @@ const sinon       = require('sinon');
 
 
 describe('Immediately remove a stream', () => {
-  const ss = new StreamSpeed();
-  const s = new PassThrough();
-  ss.add(s);
-  ss.remove(s);
-
-  // Listen for things.
-  const spy = sinon.spy();
-  s.on('speed', spy);
-
   it('Does not emit any events', (done) => {
+    const ss = new StreamSpeed();
+    const s = new PassThrough();
+    ss.add(s);
+    ss.remove(s);
+
+    // Listen for things.
+    const spy = sinon.spy();
+    s.on('speed', spy);
+
     s.on('finish', () => {
       assert.ok(!spy.called);
       done();
@@ -31,26 +31,33 @@ describe('Immediately remove a stream', () => {
 
 
 describe('Unwatch after several writes', () => {
-  const ss = new StreamSpeed(1);
-  const s = new MockStream();
-  ss.add(s);
-
-  const spy = sinon.spy();
-  ss.on('speed', spy);
-
   it('Emits no events after calling remove', (done) => {
-    // Write at 1 bps for 0.5 seconds.
-    s.interval(100, 5, 100, true);
-    s.on('finish', done);
-  });
+    const ss = new StreamSpeed(1);
+    const s = new MockStream();
+    ss.add(s);
+    const spy = sinon.spy();
+    ss.on('speed', spy);
 
-  it('Speed that is not over 1 bps, and avg not affected', () => {
-    assert.ok(spy.calledWith(1, 1));
+    // Write at 1 bps for 0.5 seconds.
+    s.write(Buffer.alloc(100), null, () => {
+      s.write(Buffer.alloc(100), null, () => {
+        assert.equal(spy.callCount, 1);
+        ss.remove(s);
+        s.write(Buffer.alloc(100), () => {
+          assert.equal(spy.callCount, 1);
+          done();
+        });
+      });
+    });
   });
 
   describe('Try removing stream again', () => {
     it('Throws error', () => {
       assert.throws(() => {
+        const ss = new StreamSpeed(1);
+        const s = new MockStream();
+        ss.add(s);
+        ss.remove(s);
         ss.remove(s);
       }, /not found/);
     });

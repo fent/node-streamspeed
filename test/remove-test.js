@@ -31,7 +31,7 @@ describe('Immediately remove a stream', () => {
 
 
 describe('Unwatch after several writes', () => {
-  it('Emits no events after calling remove', (done) => {
+  it('Emits no events after calling remove', async () => {
     const ss = new StreamSpeed(1);
     const s = new MockStream();
     ss.add(s);
@@ -39,16 +39,11 @@ describe('Unwatch after several writes', () => {
     ss.on('speed', spy);
 
     // Write at 1 bps for 0.5 seconds.
-    s.write(Buffer.alloc(100), null, () => {
-      s.write(Buffer.alloc(100), null, () => {
-        assert.equal(spy.callCount, 1);
-        ss.remove(s);
-        s.write(Buffer.alloc(100), () => {
-          assert.equal(spy.callCount, 1);
-          done();
-        });
-      });
-    });
+    await s.interval(100, 2, 200, { amountPerInterval: 2 });
+    assert.equal(spy.callCount, 1);
+    ss.remove(s);
+    await s.interval(100, 1, 200, { amountPerInterval: 2 });
+    assert.equal(spy.callCount, 1);
   });
 
   describe('Try removing stream again', () => {

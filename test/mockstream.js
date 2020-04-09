@@ -14,28 +14,41 @@ module.exports = class Mock extends PassThrough {
    * Runs the function run n times every interval.
    *
    * @param {number} length
-   * @param {number} n
+   * @param {number} amount
    * @param {number} interval
-   * @param {boolean} end
-   * @param {boolean} skipTick
+   * @param {Object} options
+   *  {boolean} end
+   *  {boolean} skipTick
+   *  {number} amountPerInterval
    */
-  interval(length, n, interval, end, skipTick) {
-    const callback = this.end.bind(this);
-    let i = 0;
+  interval(length, amount, interval, options = {}) {
+    return new Promise((resolve) => {
+      options.amountPerInterval = options.amountPerInterval || 1;
+      let i = 0;
 
-    const iid = setInterval(() => {
-      this.write(Buffer.alloc(length));
-      if (++i === n) {
-        clearInterval(iid);
-        if (end) {
-          process.nextTick(callback);
-        }
-      } else if (!skipTick) {
+      const iid = setInterval(() => {
+        let amountSoFar = 0;
+        const write = () => {
+          if (++amountSoFar < options.amountPerInterval) {
+            this.write(Buffer.alloc(length), write);
+          } else {
+            this.write(Buffer.alloc(length));
+            if (++i === amount) {
+              clearInterval(iid);
+              if (options.end) {
+                process.nextTick(this.end.bind(this));
+              }
+              resolve();
+            } else if (!options.skipTick) {
+              process.nextTick(clock.tick.bind(clock, interval));
+            }
+          }
+        };
+        write();
+      }, interval);
+      if (!options.skipTick) {
         process.nextTick(clock.tick.bind(clock, interval));
       }
-    }, interval);
-    if (!skipTick) {
-      process.nextTick(clock.tick.bind(clock, interval));
-    }
+    });
   }
 };

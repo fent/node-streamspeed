@@ -17,7 +17,7 @@ describe('Read from a stream', () => {
 
       // Write data of length 100 3 times to stream
       // at a speed of 1 byte per ms.
-      rs.interval(100, 3, 100, true);
+      rs.interval(100, 3, 100, { end: true });
 
       rs.on('end', () => {
         assert.ok(spy.calledOnce);
@@ -33,7 +33,7 @@ describe('Read from a stream', () => {
       const spy = sinon.spy();
       ss.on('speed', spy);
 
-      rs.interval(100, 3, 100, true);
+      rs.interval(100, 3, 100, { end: true });
       rs.on('end', () => {
         assert.ok(spy.calledWith(1, 1));
         done();
@@ -52,7 +52,7 @@ describe('Read from a stream', () => {
       ss.on('speed', spy);
 
       // Write at 10*400 bytes per second.
-      rs.interval(400, 10, 100, true);
+      rs.interval(400, 10, 100, { end: true });
 
       rs.on('end', () => {
         assert.ok(spy.calledOnce);
@@ -73,7 +73,7 @@ describe('Read from a stream', () => {
         done();
       });
 
-      rs.interval(400, 10, 100, true);
+      rs.interval(400, 10, 100, { end: true });
     });
   });
 
@@ -91,7 +91,7 @@ describe('Read from a stream', () => {
         assert.ok(spy.firstCall.calledWith(400, 400));
         done();
       });
-      rs.interval(400, 10, 100, true);
+      rs.interval(400, 10, 100, { end: true });
     });
   });
 });
@@ -105,9 +105,9 @@ describe('Read when stream speed is sporadic', () => {
     const spy = sinon.spy();
     ss.on('speed', spy);
 
-    rs.interval(100, 2, 100, false);
+    rs.interval(100, 2, 100, { end: false });
     setTimeout(() => {
-      rs.interval(200, 2, 100, true);
+      rs.interval(200, 2, 100, { end: true });
     }, 200);
     rs.on('end', () => {
       assert.ok(spy.firstCall.calledWith(1000, 1000));
@@ -117,10 +117,7 @@ describe('Read when stream speed is sporadic', () => {
 });
 
 describe('Data is read on the same millisecond', () => {
-  it('Speed is accurately calculated', (done) => {
-    let clock = sinon.useFakeTimers();
-    after(clock.restore);
-
+  it('Speed is accurately calculated', async () => {
     const ss = new StreamSpeed();
     const rs = new MockStream();
     ss.add(rs);
@@ -128,20 +125,13 @@ describe('Data is read on the same millisecond', () => {
     const spy = sinon.spy();
     ss.on('speed', spy);
 
-    // Write at 2*400 bytes per second.
-    setTimeout(() => {
-      rs.write(Buffer.alloc(400), () => {
-        rs.write(Buffer.alloc(400), () => {
-          process.nextTick(rs.end.bind(rs));
-        });
-      });
-    }, 100);
-    process.nextTick(clock.tick.bind(clock, 100));
-
-    rs.on('end', () => {
-      assert.ok(spy.called);
-      done();
-    });
+    // Write at 10*400 bytes per second.
+    await rs.interval(400, 1, 100, { amountPerInterval: 2 });
+    assert.ok(!spy.called);
+    await rs.interval(400, 2, 100, { amountPerInterval: 2, end: true });
+    assert.ok(spy.called);
+    assert.ok(spy.firstCall.calledWith(4000, 4000));
+    assert.ok(spy.secondCall.calledWith(8000, 6000));
   });
 });
 

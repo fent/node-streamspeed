@@ -41,8 +41,8 @@ describe('Create a group and write to it', () => {
     group.on('speed', spy);
 
     // Write at 500 B/s on 2 streams, 1000 B/s in total.
-    s1.interval(100, 6, 200, true, true);
-    s2.interval(100, 6, 200, true);
+    s1.interval(100, 6, 200, { end: true, skipTick: true });
+    s2.interval(100, 6, 200, { end: true });
     s2.on('finish', () => {
       assert.ok(spy.firstCall.calledWith(500, 500));
       assert.ok(spy.secondCall.calledWith(1000, 1000));
@@ -62,7 +62,7 @@ describe('Create a group and write to it', () => {
     group.on('speed', spy);
 
     assert.equal(group.getStreams().length, 2);
-    s1.interval(100, 6, 200, true);
+    s1.interval(100, 6, 200, { end: true });
     s1.on('end', () => {
       assert.equal(group.getStreams().length, 1);
       done();

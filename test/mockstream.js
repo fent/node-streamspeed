@@ -17,9 +17,9 @@ module.exports = class Mock extends PassThrough {
    * @param {number} amount
    * @param {number} interval
    * @param {Object} options
-   *  {boolean} end
-   *  {boolean} skipTick
-   *  {number} amountPerInterval
+   * @param {boolean} options.end
+   * @param {boolean} options.skipTick
+   * @param {number} options.amountPerInterval
    */
   interval(length, amount, interval, options = {}) {
     return new Promise((resolve) => {

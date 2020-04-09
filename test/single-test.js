@@ -88,7 +88,7 @@ describe('Read from a stream', () => {
 
       rs.on('end', () => {
         assert.ok(spy.calledOnce);
-        assert.ok(spy.firstCall.calledWith(400, 400));
+        assert.deepEqual(spy.firstCall.args, [400, 400]);
         done();
       });
       rs.interval(400, 10, 100, { end: true });
@@ -110,8 +110,8 @@ describe('Read when stream speed is sporadic', () => {
       rs.interval(200, 2, 100, { end: true });
     }, 200);
     rs.on('end', () => {
-      assert.ok(spy.firstCall.calledWith(1000, 1000));
-      assert.ok(spy.secondCall.calledWith(2000, 1500));
+      assert.deepEqual(spy.firstCall.args, [1000, 1000]);
+      assert.deepEqual(spy.secondCall.args, [2000, 1500]);
     });
   });
 });
@@ -130,8 +130,8 @@ describe('Data is read on the same millisecond', () => {
     assert.ok(!spy.called);
     await rs.interval(400, 2, 100, { amountPerInterval: 2, end: true });
     assert.ok(spy.called);
-    assert.ok(spy.firstCall.calledWith(4000, 4000));
-    assert.ok(spy.secondCall.calledWith(8000, 6000));
+    assert.deepEqual(spy.firstCall.args, [4000, 4000]);
+    assert.deepEqual(spy.secondCall.args, [8000, 6000]);
   });
 });
 

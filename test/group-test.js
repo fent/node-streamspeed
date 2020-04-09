@@ -44,8 +44,8 @@ describe('Create a group and write to it', () => {
     s1.interval(100, 6, 200, { end: true, skipTick: true });
     s2.interval(100, 6, 200, { end: true });
     s2.on('finish', () => {
-      assert.ok(spy.firstCall.calledWith(500, 500));
-      assert.ok(spy.secondCall.calledWith(1000, 1000));
+      assert.deepEqual(spy.firstCall.args, [500, 500]);
+      assert.deepEqual(spy.secondCall.args, [1000, 1000]);
       done();
     });
   });

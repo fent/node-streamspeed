@@ -14,25 +14,23 @@ const assertSpeed = (spy, speeds, startIndex = 0) => {
 
 describe('Read from a stream', () => {
   describe('with no `timeUnit`', () => {
-    it('Calculates constant speed', (done) => {
+    it('Calculates constant speed', async () => {
       const ss = new StreamSpeed();
       const rs = new MockStream();
       ss.add(rs);
       const spy = sinon.spy();
       ss.on('speed', spy);
 
-      // Write at 4000 B/s.
-      rs.interval(200, 15, 200, { end: true });
+      // Write at 1000 B/s.
+      await rs.interval(200, 15, 200);
 
-      rs.on('end', () => {
-        // Ramps up to 1000
-        assertSpeed(spy, [200, 400, 600, 800, 1000]);
+      // Ramps up to 1000 B/s.
+      assertSpeed(spy, [200, 400, 600, 800, 1000]);
 
-        // After 5 calls, speed is constant.
-        assert.equal(spy.callCount, 5);
+      // After 5 calls, speed is constant.
+      assert.equal(spy.callCount, 5);
+      assert.equal(ss.getSpeed(), 1000);
 
-        done();
-      });
     });
   });
 
@@ -118,12 +116,14 @@ describe('With custom `range`', () => {
 
       // Pause for a few secs.
       await MockStream.timeout(10000);
+      assert.equal(ss.getSpeed(), 0, 'Speed should be 0 by now');
 
       // Write at 1200 B/s.
       await rs.interval(300, 8, 250);
 
       // Speed changes quickly.
       assertSpeed(spy, [300, 600, 900, 1200], 4);
+      assert.equal(ss.getSpeed(), 1200);
     });
   });
 });

@@ -67,6 +67,7 @@ describe('Create a group and write to it', () => {
     s1.interval(100, 6, 200, { end: true });
     s1.on('end', () => {
       assert.equal(group.getStreams().length, 1);
+      assert.equal(group.getSpeed(), 0);
       done();
     });
   });

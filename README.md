@@ -47,14 +47,14 @@ Adds stream to group.
 ### StreamSpeed#remove(stream)
 Removes stream from group.
 
+### StreamSpeed#getSpeed()
+Get current speed.
+
 ### StreamSpeed#getStreams()
 Returns a list of all streams in the group.
 
-### StreamSpeed#speed
-Curent speed.
-
 ### StreamSpeed.toHuman(bytes, options)
-Convenient method to convert `bytes` to a human readable string.
+Helper method to convert `bytes` to a human readable string.
 
 ```js
 StreamSpeed.toHuman(1500);                                  // 1.46KB

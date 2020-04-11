@@ -2,8 +2,8 @@ const PassThrough = require('stream').PassThrough;
 const sinon       = require('sinon');
 
 let clock;
-before(() => { clock = sinon.useFakeTimers(); });
-after(() => { clock.restore(); });
+beforeEach(() => { clock = sinon.useFakeTimers(); });
+afterEach(() => { clock.restore(); });
 
 
 /**
@@ -26,29 +26,47 @@ module.exports = class Mock extends PassThrough {
       options.amountPerInterval = options.amountPerInterval || 1;
       let i = 0;
 
-      const iid = setInterval(() => {
-        let amountSoFar = 0;
-        const write = () => {
-          if (++amountSoFar < options.amountPerInterval) {
-            this.write(Buffer.alloc(length), write);
-          } else {
-            this.write(Buffer.alloc(length));
-            if (++i === amount) {
-              clearInterval(iid);
-              if (options.end) {
-                process.nextTick(this.end.bind(this));
-              }
-              resolve();
-            } else if (!options.skipTick) {
-              process.nextTick(clock.tick.bind(clock, interval));
-            }
+      const iid = setInterval(async () => {
+        for (let soFar = 0; soFar < options.amountPerInterval; soFar++) {
+          await this.writeSize(length);
+        }
+        if (++i === amount) {
+          clearInterval(iid);
+          if (options.end) {
+            process.nextTick(this.end.bind(this));
           }
-        };
-        write();
+          resolve();
+        } else if (!options.skipTick) {
+          process.nextTick(clock.tick.bind(clock, interval));
+        }
       }, interval);
       if (!options.skipTick) {
-        process.nextTick(clock.tick.bind(clock, interval));
+        if (interval) {
+          process.nextTick(clock.tick.bind(clock, interval));
+        } else {
+          process.nextTick(clock.next);
+        }
       }
     });
+  }
+
+  /**
+   * An async function that writes arbitrary data to the stream.
+   *
+   * @param {number} length
+   */
+  writeSize(length) {
+    return new Promise((resolve) => {
+      this.write(Buffer.alloc(length), resolve);
+    });
+  }
+
+  /**
+   * Async version of `setTimeout`.
+   *
+   * @param {number} ms
+   */
+  static timeout(ms) {
+    clock.tick(ms);
   }
 };

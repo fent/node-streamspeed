@@ -32,7 +32,7 @@ describe('Immediately remove a stream', () => {
 
 describe('Unwatch after several writes', () => {
   it('Emits no events after calling remove', async () => {
-    const ss = new StreamSpeed(1);
+    const ss = new StreamSpeed();
     const s = new MockStream();
     ss.add(s);
     const spy = sinon.spy();
@@ -40,16 +40,18 @@ describe('Unwatch after several writes', () => {
 
     // Write at 1 bps for 0.5 seconds.
     await s.interval(100, 2, 200, { amountPerInterval: 2 });
-    assert.equal(spy.callCount, 1);
+    assert.ok(spy.called);
+    let callCount = spy.callCount;
+
     ss.remove(s);
     await s.interval(100, 1, 200, { amountPerInterval: 2 });
-    assert.equal(spy.callCount, 1);
+    assert.equal(spy.callCount, callCount);
   });
 
   describe('Try removing stream again', () => {
     it('Throws error', () => {
       assert.throws(() => {
-        const ss = new StreamSpeed(1);
+        const ss = new StreamSpeed({ timeUnit: 1 });
         const s = new MockStream();
         ss.add(s);
         ss.remove(s);

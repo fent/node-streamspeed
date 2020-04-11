@@ -5,13 +5,42 @@ const assert      = require('assert');
 const sinon       = require('sinon');
 
 
+const assertSpeed = (spy, speeds, startIndex = 0) => {
+  assert.equal(spy.callCount, speeds.length + startIndex);
+  for (let [index, speed] of speeds.entries()) {
+    assert.deepEqual(spy.getCall(index + startIndex).args, [speed]);
+  }
+};
+
 describe('Read from a stream', () => {
-  describe('with a unit', () => {
-    it('Emit one speed event', (done) => {
-      const ss = new StreamSpeed(1);
+  describe('with no `timeUnit`', () => {
+    it('Calculates constant speed', (done) => {
+      const ss = new StreamSpeed();
       const rs = new MockStream();
       ss.add(rs);
+      const spy = sinon.spy();
+      ss.on('speed', spy);
 
+      // Write at 4000 B/s.
+      rs.interval(200, 15, 200, { end: true });
+
+      rs.on('end', () => {
+        // Ramps up to 1000
+        assertSpeed(spy, [200, 400, 600, 800, 1000]);
+
+        // After 5 calls, speed is constant.
+        assert.equal(spy.callCount, 5);
+
+        done();
+      });
+    });
+  });
+
+  describe('with a `timeUnit`', () => {
+    it('Emit speed according to set unit', (done) => {
+      const ss = new StreamSpeed({ timeUnit: 1000 * 60 });
+      const rs = new MockStream();
+      ss.add(rs);
       const spy = sinon.spy();
       ss.on('speed', spy);
 
@@ -20,118 +49,28 @@ describe('Read from a stream', () => {
       rs.interval(100, 3, 100, { end: true });
 
       rs.on('end', () => {
-        assert.ok(spy.calledOnce);
+        assert.equal(spy.callCount, 3);
+        assertSpeed(spy, [6000, 12000, 18000]);
         done();
       });
-    });
-
-    it('Calculates correct ending speed and avg speed in bytes', (done) => {
-      const ss = new StreamSpeed(1);
-      const rs = new MockStream();
-      ss.add(rs);
-
-      const spy = sinon.spy();
-      ss.on('speed', spy);
-
-      rs.interval(100, 3, 100, { end: true });
-      rs.on('end', () => {
-        assert.ok(spy.calledWith(1, 1));
-        done();
-      });
-    });
-
-  });
-
-  describe('with no unit', () => {
-    it('Emited one speed event', (done) => {
-      const ss = new StreamSpeed();
-      const rs = new MockStream();
-      ss.add(rs);
-
-      const spy = sinon.spy();
-      ss.on('speed', spy);
-
-      // Write at 10*400 bytes per second.
-      rs.interval(400, 10, 100, { end: true });
-
-      rs.on('end', () => {
-        assert.ok(spy.calledOnce);
-        done();
-      });
-    });
-
-    it('Calculates correct ending speed and avg speed', (done) => {
-      const ss = new StreamSpeed();
-      const rs = new MockStream();
-      ss.add(rs);
-
-      const spy = sinon.spy();
-      ss.on('speed', spy);
-
-      rs.on('end', () => {
-        assert.ok(spy.calledWith(4000, 4000));
-        done();
-      });
-
-      rs.interval(400, 10, 100, { end: true });
     });
   });
 
-  describe('Written to at the rate of the unit', () => {
-    it('Speed and avg speed are constant', (done) => {
-      const ss = new StreamSpeed(100);
-      const rs = new MockStream();
-      ss.add(rs);
-
-      const spy = sinon.spy();
-      ss.on('speed', spy);
-
-      rs.on('end', () => {
-        assert.ok(spy.calledOnce);
-        assert.deepEqual(spy.firstCall.args, [400, 400]);
-        done();
-      });
-      rs.interval(400, 10, 100, { end: true });
-    });
-  });
 });
 
 describe('Read when stream speed is sporadic', () => {
-  it('Speed and avg speed changes', () => {
+  it('Speed is reactive', async () => {
     const ss = new StreamSpeed();
     const rs = new MockStream();
     ss.add(rs);
-
     const spy = sinon.spy();
     ss.on('speed', spy);
 
-    rs.interval(100, 2, 100, { end: false });
-    setTimeout(() => {
-      rs.interval(200, 2, 100, { end: true });
-    }, 200);
-    rs.on('end', () => {
-      assert.deepEqual(spy.firstCall.args, [1000, 1000]);
-      assert.deepEqual(spy.secondCall.args, [2000, 1500]);
-    });
-  });
-});
+    await rs.interval(100, 2, 100, { end: false });
+    await MockStream.timeout(900);
+    await rs.interval(200, 3, 100, { end: true });
 
-describe('Data is read on the same millisecond', () => {
-  it('Speed is accurately calculated', async () => {
-    const ss = new StreamSpeed();
-    const rs = new MockStream();
-    ss.add(rs);
-
-    const spy = sinon.spy();
-    ss.on('speed', spy);
-
-    // Write at 10*400 bytes per second.
-    await rs.interval(400, 1, 100, { amountPerInterval: 2 });
-    assert.ok(!spy.called);
-    await rs.interval(400, 2, 100, { amountPerInterval: 2, end: true });
-    assert.ok(spy.called);
-    assert.deepEqual(spy.firstCall.args, [4000, 4000]);
-    assert.deepEqual(spy.secondCall.args, [8000, 6000]);
+    assertSpeed(spy, [100, 200, 400, 600]);
   });
 });
 
@@ -143,5 +82,48 @@ describe('Stream being monitored has an error', () => {
     ss.add(rs);
     rs.emit('error', Error('my error'));
     assert.equal(ss.getStreams().length, 0);
+  });
+});
+
+describe('With custom `range`', () => {
+  it('Old `data` events are not used for the `avg`', async () => {
+    const ss = new StreamSpeed({ range: 2000 });
+    const rs = new MockStream();
+    ss.add(rs);
+    const spy = sinon.spy();
+    ss.on('speed', spy);
+
+    // Write at 100 B/s for 4 seconds.
+    await rs.interval(100, 4, 1000);
+    assertSpeed(spy, [50, 100]);
+
+    // Speed up to 800 B/s.
+    await rs.interval(200, 4, 1000);
+
+    // Progressively speeds up per every `data` event.
+    assertSpeed(spy, [150, 200], 2);
+  });
+
+  describe('Stream stops emitting data for a while', () => {
+    it('Speed slows down and picks back up', async () => {
+      const ss = new StreamSpeed();
+      const rs = new MockStream();
+      ss.add(rs);
+      const spy = sinon.spy();
+      ss.on('speed', spy);
+
+      // Write at 400 B/s for a sec.
+      await rs.interval(100, 8, 250);
+      assertSpeed(spy, [100, 200, 300, 400]);
+
+      // Pause for a few secs.
+      await MockStream.timeout(10000);
+
+      // Write at 1200 B/s.
+      await rs.interval(300, 8, 250);
+
+      // Speed changes quickly.
+      assertSpeed(spy, [300, 600, 900, 1200], 4);
+    });
   });
 });

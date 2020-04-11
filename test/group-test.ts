@@ -1,7 +1,7 @@
-const StreamSpeed = require('..');
-const MockStream  = require('./mockstream');
-const assert      = require('assert');
-const sinon       = require('sinon');
+import StreamSpeed from '..';
+import MockStream from './mockstream';
+import assert from 'assert';
+import sinon from 'sinon';
 
 
 describe('Create a group and write to it', () => {

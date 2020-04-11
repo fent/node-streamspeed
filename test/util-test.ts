@@ -1,10 +1,10 @@
-const StreamSpeed = require('..');
-const assert      = require('assert');
+import StreamSpeed from '..';
+import assert from 'assert';
 
 
 describe('StreamSpeed.toHuman()', () => {
   it('Does not give a unit to 0 bytes', () => {
-    assert.equal(StreamSpeed.toHuman(0, 'MB'), '0');
+    assert.equal(StreamSpeed.toHuman(0), '0');
   });
 
   it('Turns bytes into human readable size', () => {

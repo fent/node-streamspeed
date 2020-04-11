@@ -1,15 +1,21 @@
-const PassThrough = require('stream').PassThrough;
-const sinon       = require('sinon');
+import { PassThrough } from 'stream';
+import sinon from 'sinon';
 
-let clock;
+let clock: sinon.SinonFakeTimers;
 beforeEach(() => { clock = sinon.useFakeTimers(); });
 afterEach(() => { clock.restore(); });
+
+interface IntervalOptions {
+  end?: boolean;
+  skipTick?: boolean;
+  amountPerInterval?: number;
+}
 
 
 /**
  * Mock a readable/writable stream for testing.
  */
-module.exports = class Mock extends PassThrough {
+export default class Mock extends PassThrough {
   /**
    * Runs the function run n times every interval.
    *
@@ -21,7 +27,7 @@ module.exports = class Mock extends PassThrough {
    * @param {boolean} options.skipTick
    * @param {number} options.amountPerInterval
    */
-  interval(length, amount, interval, options = {}) {
+  interval(length: number, amount: number, interval: number, options: IntervalOptions = {}) {
     return new Promise((resolve) => {
       options.amountPerInterval = options.amountPerInterval || 1;
       let i = 0;
@@ -55,7 +61,7 @@ module.exports = class Mock extends PassThrough {
    *
    * @param {number} length
    */
-  writeSize(length) {
+  writeSize(length: number) {
     return new Promise((resolve) => {
       this.write(Buffer.alloc(length), resolve);
     });
@@ -66,7 +72,7 @@ module.exports = class Mock extends PassThrough {
    *
    * @param {number} ms
    */
-  static timeout(ms) {
+  static timeout(ms: number) {
     clock.tick(ms);
   }
-};
+}

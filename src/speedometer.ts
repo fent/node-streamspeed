@@ -1,4 +1,17 @@
-module.exports = class Speedometer {
+export interface Options {
+  timeUnit?: number;
+  range?: number;
+}
+
+interface HistoryItem {
+  speed: number;
+  time: number;
+}
+
+export class Speedometer {
+  public options: Options;
+  private history: HistoryItem[];
+  private _lastSpeed: number;
   /**
    * Helps count the number of bytes per data event in streams.
    *
@@ -7,7 +20,7 @@ module.exports = class Speedometer {
    * @param {number?} options.timeUnit
    * @param {number?} options.range
    */
-  constructor(options) {
+  constructor(options: Options) {
     this.options = options;
     this.history = [];
     this._lastSpeed = 0;
@@ -20,7 +33,7 @@ module.exports = class Speedometer {
    * @param {Buffer|string} data
    * @param {Function} callback
    */
-  update(data, callback) {
+  update(data: Buffer, callback: (speed: number) => void) {
     const now = Date.now();
 
     this.history.push({ 
@@ -58,4 +71,4 @@ module.exports = class Speedometer {
 
     return speed;
   }
-};
+}

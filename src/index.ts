@@ -1,9 +1,32 @@
-const EventEmitter = require('events').EventEmitter;
-const PassThrough  = require('stream').PassThrough;
-const Speedometer  = require('./speedometer');
+import { EventEmitter } from 'events';
+import { PassThrough, Readable } from 'stream';
+import { Speedometer, Options } from './speedometer';
 
 
-module.exports = class StreamSpeed extends EventEmitter {
+namespace StreamSpeed {
+  export interface Options {
+    timeUnit?: number;
+    range?: number;
+  }
+
+  export interface ToHumanOptions {
+    timeUnit?: string;
+    precision?: number;
+  }
+}
+
+interface Meta {
+  speedo: Speedometer;
+
+}
+
+class StreamSpeed extends EventEmitter {
+  public options: Options;
+  private _streams: Map<Readable, {
+    speedo: Speedometer;
+    cleanup: () => void;
+  }>;
+
   /**
    * Emits speed for a group of streams.
    *
@@ -29,7 +52,7 @@ module.exports = class StreamSpeed extends EventEmitter {
    * @param {Readable} origstream
    * @param {number} speed
    */
-  _update(origstream, speed) {
+  _update(origstream: Readable, speed: number) {
     for (let [stream, m] of this._streams) {
       // Skip own stream.
       if (stream === origstream) {
@@ -59,7 +82,7 @@ module.exports = class StreamSpeed extends EventEmitter {
    *
    * @param {Readable} stream
    */
-  add(origstream) {
+  add(origstream: Readable) {
     // Check if stream is already in group.
     if (this._streams.has(origstream)) {
       throw Error('Stream already in group');
@@ -99,7 +122,7 @@ module.exports = class StreamSpeed extends EventEmitter {
    *
    * @param {Readable} stream
    */
-  remove(stream) {
+  remove(stream: Readable) {
     // Check if stream is in group.
     const meta = this._streams.get(stream);
     if (!meta) {
@@ -123,7 +146,7 @@ module.exports = class StreamSpeed extends EventEmitter {
    *
    * @param {Readable} stream
    */
-  getStreamSpeed(stream) {
+  getStreamSpeed(stream: Readable) {
     const meta = this._streams.get(stream);
     if (!meta) {
       throw Error('Stream not found in group');
@@ -142,13 +165,15 @@ module.exports = class StreamSpeed extends EventEmitter {
    * @param {number?} options.precision
    * @return {string}
    */
-  static toHuman(bytes, options = {}) {
+  static toHuman(bytes: number, options: StreamSpeed.ToHumanOptions = {}) {
     const units = ' KMGTPEZYXWVU';
     if (bytes <= 0) { return '0'; }
-    options.timeUnit = options.timeUnit ? '/' + options.timeUnit : '';
-    const t2 = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), 12);
+    let timeUnit = options.timeUnit ? '/' + options.timeUnit : '';
+    let t2 = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), 12);
     let rate = Math.round(bytes * 100 / Math.pow(1024, t2)) / 100;
-    rate = options.precision ? rate.toPrecision(options.precision) : rate;
-    return rate + units.charAt(t2).replace(' ', '') + 'B' + options.timeUnit;
+    let prate = options.precision ? rate.toPrecision(options.precision) : rate;
+    return prate + units.charAt(t2).replace(' ', '') + 'B' + timeUnit;
   }
-};
+}
+
+export = StreamSpeed;

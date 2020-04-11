@@ -1,8 +1,8 @@
-const StreamSpeed = require('..');
-const MockStream  = require('./mockstream');
-const PassThrough = require('stream').PassThrough;
-const assert      = require('assert');
-const sinon       = require('sinon');
+import StreamSpeed from'..';
+import MockStream from'./mockstream';
+import { PassThrough } from'stream';
+import assert from'assert';
+import sinon from'sinon';
 
 
 describe('Immediately remove a stream', () => {

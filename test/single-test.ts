@@ -1,11 +1,11 @@
-const StreamSpeed = require('..');
-const MockStream  = require('./mockstream');
-const PassThrough = require('stream').PassThrough;
-const assert      = require('assert');
-const sinon       = require('sinon');
+import StreamSpeed from '..';
+import MockStream from './mockstream';
+import { PassThrough } from 'stream';
+import assert from 'assert';
+import sinon from 'sinon';
 
 
-const assertSpeed = (spy, speeds, startIndex = 0) => {
+const assertSpeed = (spy: sinon.SinonSpy, speeds: number[], startIndex = 0) => {
   assert.equal(spy.callCount, speeds.length + startIndex);
   for (let [index, speed] of speeds.entries()) {
     assert.deepEqual(spy.getCall(index + startIndex).args, [speed]);

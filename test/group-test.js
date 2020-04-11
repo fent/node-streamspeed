@@ -48,6 +48,9 @@ describe('Create a group and write to it', () => {
       assert.equal(spy.callCount, 2);
       assert.deepEqual(spy.getCall(0).args, [500]);
       assert.deepEqual(spy.getCall(1).args, [1000]);
+      assert.equal(group.getSpeed(), 1000);
+      assert.equal(group.getStreamSpeed(s1), 500);
+      assert.equal(group.getStreamSpeed(s2), 500);
       done();
     });
   });
@@ -66,6 +69,9 @@ describe('Create a group and write to it', () => {
     assert.equal(group.getStreams().length, 2);
     s1.interval(100, 6, 200, { end: true });
     s1.on('end', () => {
+      assert.throws(() => {
+        group.getStreamSpeed(s1);
+      }, /not found/);
       assert.equal(group.getStreams().length, 1);
       assert.equal(group.getSpeed(), 0);
       done();

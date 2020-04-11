@@ -50,6 +50,9 @@ Removes stream from group.
 ### StreamSpeed#getSpeed()
 Get current speed.
 
+### StreamSpeed#getStreamSpeed(stream)
+Get an individual's stream's current speed.
+
 ### StreamSpeed#getStreams()
 Returns a list of all streams in the group.
 
@@ -60,7 +63,7 @@ Helper method to convert `bytes` to a human readable string.
 StreamSpeed.toHuman(1500);                                  // 1.46KB
 StreamSpeed.toHuman(1024 * 1024);                           // 1MB
 StreamSpeed.toHuman(1024 * 1024 * 20.5, { timeUnit: 's' }); // 20.5MB/s
-StreamSpeed.toHuman(1024 * 1024 * 20.5, { precision: 3 });   // 20.50MB
+StreamSpeed.toHuman(1024 * 1024 * 20.5, { precision: 3 });  // 20.50MB
 ```
 
 ### Event: 'speed'

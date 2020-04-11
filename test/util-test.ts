@@ -3,8 +3,9 @@ import assert from 'assert';
 
 
 describe('StreamSpeed.toHuman()', () => {
-  it('Does not give a unit to 0 bytes', () => {
-    assert.equal(StreamSpeed.toHuman(0), '0');
+  it('Gives a unit to 0 bytes', () => {
+    assert.equal(StreamSpeed.toHuman(0), '0B');
+    assert.equal(StreamSpeed.toHuman(0, { timeUnit: 's' }), '0B/s');
   });
 
   it('Turns bytes into human readable size', () => {

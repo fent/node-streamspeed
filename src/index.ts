@@ -167,9 +167,9 @@ class StreamSpeed extends EventEmitter {
    */
   static toHuman(bytes: number, options: StreamSpeed.ToHumanOptions = {}) {
     const units = ' KMGTPEZYXWVU';
-    if (bytes <= 0) { return '0'; }
     let timeUnit = options.timeUnit ? '/' + options.timeUnit : '';
-    let t2 = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), 12);
+    let t2 = bytes > 0 ?
+      Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), 12) : 0;
     let rate = Math.round(bytes * 100 / Math.pow(1024, t2)) / 100;
     let prate = options.precision ? rate.toPrecision(options.precision) : rate;
     return prate + units.charAt(t2).replace(' ', '') + 'B' + timeUnit;

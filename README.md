@@ -2,7 +2,7 @@
 
 A simple way to keep track of the speed of your readable streams.
 
-[![Dependency Status](https://david-dm.org/fent/node-streamspeed.svg)](https://david-dm.org/fent/node-streamspeed)
+![Depfu](https://img.shields.io/depfu/fent/node-streamspeed)
 [![codecov](https://codecov.io/gh/fent/node-streamspeed/branch/master/graph/badge.svg)](https://codecov.io/gh/fent/node-streamspeed)
 
 # Usage

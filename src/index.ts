@@ -15,10 +15,6 @@ namespace StreamSpeed {
   }
 }
 
-interface Meta {
-  speedo: Speedometer;
-
-}
 
 class StreamSpeed extends EventEmitter {
   public options: Options;

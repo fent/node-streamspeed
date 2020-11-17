@@ -9,6 +9,7 @@
     "strictBindCallApply": true,
     "strictPropertyInitialization": false,
     "noImplicitThis": true,
+    "noUnusedLocals": true,
     "alwaysStrict": true,
     "esModuleInterop": true,
     "outDir": "spec"

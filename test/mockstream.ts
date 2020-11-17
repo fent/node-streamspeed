@@ -67,12 +67,7 @@ export default class Mock extends PassThrough {
     });
   }
 
-  /**
-   * Async version of `setTimeout`.
-   *
-   * @param {number} ms
-   */
-  static timeout(ms: number) {
-    clock.tick(ms);
+  static get clock() {
+    return clock;
   }
 }

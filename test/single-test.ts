@@ -65,7 +65,7 @@ describe('Read when stream speed is sporadic', () => {
     ss.on('speed', spy);
 
     await rs.interval(100, 2, 100, { end: false });
-    await MockStream.timeout(900);
+    await MockStream.clock.tick(900);
     await rs.interval(200, 3, 100, { end: true });
 
     assertSpeed(spy, [100, 200, 400, 600]);
@@ -115,7 +115,7 @@ describe('With custom `range`', () => {
       assertSpeed(spy, [100, 200, 300, 400]);
 
       // Pause for a few secs.
-      await MockStream.timeout(10000);
+      await MockStream.clock.tick(10000);
       assert.equal(ss.getSpeed(), 0, 'Speed should be 0 by now');
 
       // Write at 1200 B/s.

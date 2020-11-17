@@ -18,17 +18,6 @@ describe('Create a group and write to it', () => {
     assert.equal(group.getStreams().length, 3);
   });
 
-  describe('Try adding the same stream again', () => {
-    it('Throws error', () => {
-      assert.throws(() => {
-        const group = new StreamSpeed();
-        const s1 = new MockStream();
-        group.add(s1);
-        group.add(s1);
-      }, /already in group/);
-    });
-  });
-
   it('Should emit `speed` event once for each stream', (done) => {
     const group = new StreamSpeed();
     const s1 = new MockStream();
@@ -69,12 +58,26 @@ describe('Create a group and write to it', () => {
     assert.equal(group.getStreams().length, 2);
     s1.interval(100, 6, 200, { end: true });
     s1.on('end', () => {
+      setImmediate(() => {
+        assert.throws(() => {
+          group.getStreamSpeed(s1);
+        }, /not found/);
+        assert.equal(group.getStreams().length, 1);
+        assert.equal(group.getSpeed(), 0);
+        done();
+      });
+      MockStream.clock.tick(0);
+    });
+  });
+
+  describe('Try adding the same stream again', () => {
+    it('Throws error', () => {
       assert.throws(() => {
-        group.getStreamSpeed(s1);
-      }, /not found/);
-      assert.equal(group.getStreams().length, 1);
-      assert.equal(group.getSpeed(), 0);
-      done();
+        const group = new StreamSpeed();
+        const s1 = new MockStream();
+        group.add(s1);
+        group.add(s1);
+      }, /already in group/);
     });
   });
 });

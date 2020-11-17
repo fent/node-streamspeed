@@ -112,7 +112,7 @@ class StreamSpeed extends EventEmitter {
     });
 
     stream.on('readable', onReadable);
-    origstream.on('end', cleanup);
+    origstream.on('end', setImmediate.bind(null, cleanup));
     origstream.on('error', cleanup);
   }
 

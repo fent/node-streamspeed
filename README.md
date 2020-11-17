@@ -39,7 +39,7 @@ group.on('speed', (speed) => {
 ### new StreamSpeed([options])
 A group that can be used to watch several streams. Will emit `speed` events. `options` can have the following properties,
 - `timeUnit` - Defaults to `1000` for speed per second. If you want another unit such as per hour, use `1000 * 60 * 60`.
-- `range` - The time in ms to use to calculate the speed over. Defaults to 1000. The longer this is, the longer it'll speed will ramp up and down until it stabilizes for a big readstream. The shorter it is, the more responsive it is to sudden speed changes.
+- `range` - The time in ms to calculate speed over. Defaults to `1000`. The longer this is, the more stable speed will be for a big stream. The shorter it is, the more responsive it is to sudden speed changes.
 
 ### StreamSpeed#add(stream)
 Adds stream to group.

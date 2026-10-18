@@ -2,7 +2,8 @@
 
 A simple way to keep track of the speed of your readable streams.
 
-![Depfu](https://img.shields.io/depfu/fent/node-streamspeed)
+[![npm](https://img.shields.io/npm/v/streamspeed)](https://www.npmjs.com/package/streamspeed)
+[![Node.js CI](https://github.com/fent/node-streamspeed/actions/workflows/nodejs.yml/badge.svg)](https://github.com/fent/node-streamspeed/actions/workflows/nodejs.yml)
 [![codecov](https://codecov.io/gh/fent/node-streamspeed/branch/master/graph/badge.svg)](https://codecov.io/gh/fent/node-streamspeed)
 
 # Usage

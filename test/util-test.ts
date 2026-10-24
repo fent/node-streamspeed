@@ -1,6 +1,5 @@
-import StreamSpeed from '..';
 import assert from 'assert';
-
+import StreamSpeed from '..';
 
 describe('StreamSpeed.toHuman()', () => {
   it('Gives a unit to 0 bytes', () => {
@@ -15,23 +14,35 @@ describe('StreamSpeed.toHuman()', () => {
 
   describe('With `timeUnit`', () => {
     it('Turns bytes into human readable size', () => {
-      assert.equal(StreamSpeed.toHuman(1024, {
-        timeUnit: 's'
-      }), '1KB/s');
-      assert.equal(StreamSpeed.toHuman(1024 * 1024 * 1.5, {
-        timeUnit: 's'
-      }), '1.5MB/s');
+      assert.equal(
+        StreamSpeed.toHuman(1024, {
+          timeUnit: 's',
+        }),
+        '1KB/s',
+      );
+      assert.equal(
+        StreamSpeed.toHuman(1024 * 1024 * 1.5, {
+          timeUnit: 's',
+        }),
+        '1.5MB/s',
+      );
     });
   });
 
   describe('With `precision`', () => {
     it('Formats speed with requested number of precision', () => {
-      assert.equal(StreamSpeed.toHuman(1024 * 1024 * 1.5, {
-        precision: 3
-      }), '1.50MB');
-      assert.equal(StreamSpeed.toHuman(1024 * 1024 * 1.1234567, {
-        precision: 2
-      }), '1.1MB');
+      assert.equal(
+        StreamSpeed.toHuman(1024 * 1024 * 1.5, {
+          precision: 3,
+        }),
+        '1.50MB',
+      );
+      assert.equal(
+        StreamSpeed.toHuman(1024 * 1024 * 1.1234567, {
+          precision: 2,
+        }),
+        '1.1MB',
+      );
     });
   });
 });

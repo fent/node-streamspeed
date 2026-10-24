@@ -1,13 +1,12 @@
-import StreamSpeed from '..';
-import MockStream from './mockstream';
-import { PassThrough } from 'stream';
 import assert from 'assert';
 import sinon from 'sinon';
-
+import { PassThrough } from 'stream';
+import StreamSpeed from '..';
+import MockStream from './mockstream';
 
 const assertSpeed = (spy: sinon.SinonSpy, speeds: number[], startIndex = 0) => {
   assert.equal(spy.callCount, speeds.length + startIndex);
-  for (let [index, speed] of speeds.entries()) {
+  for (const [index, speed] of speeds.entries()) {
     assert.deepEqual(spy.getCall(index + startIndex).args, [speed]);
   }
 };
@@ -30,7 +29,6 @@ describe('Read from a stream', () => {
       // After 5 calls, speed is constant.
       assert.equal(spy.callCount, 5);
       assert.equal(ss.getSpeed(), 1000);
-
     });
   });
 
@@ -53,7 +51,6 @@ describe('Read from a stream', () => {
       });
     });
   });
-
 });
 
 describe('Read when stream speed is sporadic', () => {

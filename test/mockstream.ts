@@ -1,16 +1,27 @@
-import { PassThrough } from 'stream';
 import sinon from 'sinon';
+import { PassThrough } from 'stream';
 
 let clock: sinon.SinonFakeTimers;
-beforeEach(() => { clock = sinon.useFakeTimers(); });
-afterEach(() => { clock.restore(); });
+beforeEach(() => {
+  clock = sinon.useFakeTimers({
+    toFake: [
+      'setTimeout',
+      'clearTimeout',
+      'setInterval',
+      'clearInterval',
+      'Date',
+    ],
+  });
+});
+afterEach(() => {
+  clock.restore();
+});
 
 interface IntervalOptions {
   end?: boolean;
   skipTick?: boolean;
   amountPerInterval?: number;
 }
-
 
 /**
  * Mock a readable/writable stream for testing.
@@ -27,8 +38,13 @@ export default class Mock extends PassThrough {
    * @param {boolean} options.skipTick
    * @param {number} options.amountPerInterval
    */
-  interval(length: number, amount: number, interval: number, options: IntervalOptions = {}) {
-    return new Promise((resolve) => {
+  interval(
+    length: number,
+    amount: number,
+    interval: number,
+    options: IntervalOptions = {},
+  ) {
+    return new Promise<void>((resolve) => {
       options.amountPerInterval = options.amountPerInterval || 1;
       let i = 0;
 

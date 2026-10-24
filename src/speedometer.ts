@@ -26,7 +26,6 @@ export class Speedometer {
     this._lastSpeed = 0;
   }
 
-
   /**
    * Called when new data arrives.
    *
@@ -36,12 +35,12 @@ export class Speedometer {
   update(data: Buffer, callback: (speed: number) => void) {
     const now = Date.now();
 
-    this.history.push({ 
+    this.history.push({
       speed: data.length,
       time: now,
     });
 
-    let speed = this.getSpeed();
+    const speed = this.getSpeed();
     const change = this._lastSpeed !== speed;
     this._lastSpeed = speed;
 
@@ -55,18 +54,19 @@ export class Speedometer {
    * Gets current speed.
    */
   getSpeed() {
-    let now = Date.now();
+    const now = Date.now();
     if (this.history.length) {
       // Remove old data events.
-      let index = this.history
-        .findIndex(item => item.time > now - this.options.range);
+      const index = this.history.findIndex(
+        (item) => item.time > now - this.options.range,
+      );
       this.history = index > -1 ? this.history.slice(index) : [];
     }
 
     // Get total data emitted in `range` time period.
-    let totaldata = this.history.reduce((sum, point) => point.speed + sum, 0);
-    let speed = Math.round(
-      totaldata / this.options.range * this.options.timeUnit
+    const totaldata = this.history.reduce((sum, point) => point.speed + sum, 0);
+    const speed = Math.round(
+      (totaldata / this.options.range) * this.options.timeUnit,
     );
 
     return speed;

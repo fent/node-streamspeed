@@ -1,9 +1,8 @@
-import StreamSpeed from'..';
-import MockStream from'./mockstream';
-import { PassThrough } from'stream';
-import assert from'assert';
-import sinon from'sinon';
-
+import assert from 'assert';
+import sinon from 'sinon';
+import { PassThrough } from 'stream';
+import StreamSpeed from '..';
+import MockStream from './mockstream';
 
 describe('Immediately remove a stream', () => {
   it('Does not emit any events', (done) => {
@@ -25,10 +24,8 @@ describe('Immediately remove a stream', () => {
     s.write(Buffer.alloc(100));
     s.write(Buffer.alloc(200));
     s.end();
-
   });
 });
-
 
 describe('Unwatch after several writes', () => {
   it('Emits no events after calling remove', async () => {
@@ -41,7 +38,7 @@ describe('Unwatch after several writes', () => {
     // Write at 1 bps for 0.5 seconds.
     await s.interval(100, 2, 200, { amountPerInterval: 2 });
     assert.ok(spy.called);
-    let callCount = spy.callCount;
+    const callCount = spy.callCount;
 
     ss.remove(s);
     await s.interval(100, 1, 200, { amountPerInterval: 2 });

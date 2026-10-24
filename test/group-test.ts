@@ -1,8 +1,7 @@
-import StreamSpeed from '..';
-import MockStream from './mockstream';
 import assert from 'assert';
 import sinon from 'sinon';
-
+import StreamSpeed from '..';
+import MockStream from './mockstream';
 
 describe('Create a group and write to it', () => {
   it('All streams added show up', () => {

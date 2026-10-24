@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
-import { PassThrough, Readable } from 'stream';
-import { Speedometer, Options } from './speedometer';
-
+import { PassThrough, type Readable } from 'stream';
+import { type Options, Speedometer } from './speedometer';
 
 namespace StreamSpeed {
   export interface Options {
@@ -15,13 +14,15 @@ namespace StreamSpeed {
   }
 }
 
-
 class StreamSpeed extends EventEmitter {
   public options: Options;
-  private _streams: Map<Readable, {
-    speedo: Speedometer;
-    cleanup: () => void;
-  }>;
+  private _streams: Map<
+    Readable,
+    {
+      speedo: Speedometer;
+      cleanup: () => void;
+    }
+  >;
 
   /**
    * Emits speed for a group of streams.
@@ -34,13 +35,15 @@ class StreamSpeed extends EventEmitter {
    */
   constructor(options = {}) {
     super();
-    this.options = Object.assign({
-      timeUnit: 1000,
-      range: 1000,
-    }, options);
+    this.options = Object.assign(
+      {
+        timeUnit: 1000,
+        range: 1000,
+      },
+      options,
+    );
     this._streams = new Map();
   }
-
 
   /**
    * Updates the group with the latest change in speed.
@@ -49,7 +52,7 @@ class StreamSpeed extends EventEmitter {
    * @param {number} speed
    */
   _update(origstream: Readable, speed: number) {
-    for (let [stream, m] of this._streams) {
+    for (const [stream, m] of this._streams) {
       // Skip own stream.
       if (stream === origstream) {
         continue;
@@ -62,7 +65,6 @@ class StreamSpeed extends EventEmitter {
     this.emit('speed', speed);
   }
 
-
   /**
    * Convenient method that returns list of streams in this group.
    *
@@ -71,7 +73,6 @@ class StreamSpeed extends EventEmitter {
   getStreams() {
     return Array.from(this._streams.keys());
   }
-
 
   /**
    * Add stream to group.
@@ -112,7 +113,6 @@ class StreamSpeed extends EventEmitter {
     origstream.on('error', cleanup);
   }
 
-
   /**
    * Remove stream from group.
    *
@@ -127,15 +127,15 @@ class StreamSpeed extends EventEmitter {
     meta.cleanup();
   }
 
-
   /**
    * Get current speed across all streams.
    */
   getSpeed() {
-    return Array.from(this._streams.values())
-      .reduce((sum, meta) => sum + meta.speedo.getSpeed(), 0);
+    return Array.from(this._streams.values()).reduce(
+      (sum, meta) => sum + meta.speedo.getSpeed(),
+      0,
+    );
   }
-
 
   /**
    * Get an individual stream's speed.
@@ -150,7 +150,6 @@ class StreamSpeed extends EventEmitter {
     return meta.speedo.getSpeed();
   }
 
-
   /**
    * Converts bytes to human readable unit.
    * Thank you Amir from StackOverflow.
@@ -163,11 +162,15 @@ class StreamSpeed extends EventEmitter {
    */
   static toHuman(bytes: number, options: StreamSpeed.ToHumanOptions = {}) {
     const units = ' KMGTPEZYXWVU';
-    let timeUnit = options.timeUnit ? '/' + options.timeUnit : '';
-    let t2 = bytes > 0 ?
-      Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), 12) : 0;
-    let rate = Math.round(bytes * 100 / Math.pow(1024, t2)) / 100;
-    let prate = options.precision ? rate.toPrecision(options.precision) : rate;
+    const timeUnit = options.timeUnit ? '/' + options.timeUnit : '';
+    const t2 =
+      bytes > 0
+        ? Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), 12)
+        : 0;
+    const rate = Math.round((bytes * 100) / 1024 ** t2) / 100;
+    const prate = options.precision
+      ? rate.toPrecision(options.precision)
+      : rate;
     return prate + units.charAt(t2).replace(' ', '') + 'B' + timeUnit;
   }
 }

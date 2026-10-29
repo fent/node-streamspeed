@@ -1,5 +1,5 @@
+import { PassThrough } from 'node:stream';
 import sinon from 'sinon';
-import { PassThrough } from 'stream';
 
 let clock: sinon.SinonFakeTimers;
 beforeEach(() => {

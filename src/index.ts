@@ -1,5 +1,5 @@
-import { EventEmitter } from 'events';
-import { PassThrough, type Readable } from 'stream';
+import { EventEmitter } from 'node:events';
+import { PassThrough, type Readable } from 'node:stream';
 import { type Options, Speedometer } from './speedometer';
 
 namespace StreamSpeed {
@@ -162,7 +162,7 @@ class StreamSpeed extends EventEmitter {
    */
   static toHuman(bytes: number, options: StreamSpeed.ToHumanOptions = {}) {
     const units = ' KMGTPEZYXWVU';
-    const timeUnit = options.timeUnit ? '/' + options.timeUnit : '';
+    const timeUnit = options.timeUnit ? `/${options.timeUnit}` : '';
     const t2 =
       bytes > 0
         ? Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), 12)
@@ -171,7 +171,7 @@ class StreamSpeed extends EventEmitter {
     const prate = options.precision
       ? rate.toPrecision(options.precision)
       : rate;
-    return prate + units.charAt(t2).replace(' ', '') + 'B' + timeUnit;
+    return `${prate + units.charAt(t2).replace(' ', '')}B${timeUnit}`;
   }
 }
 

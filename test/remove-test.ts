@@ -1,6 +1,6 @@
-import assert from 'assert';
+import assert from 'node:assert';
+import { PassThrough } from 'node:stream';
 import sinon from 'sinon';
-import { PassThrough } from 'stream';
 import StreamSpeed from '..';
 import MockStream from './mockstream';
 

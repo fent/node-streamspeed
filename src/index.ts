@@ -15,6 +15,9 @@ namespace StreamSpeed {
 }
 
 class StreamSpeed extends EventEmitter {
+  static StreamSpeed = StreamSpeed;
+  static default = StreamSpeed;
+
   public options: Options;
   private _streams: Map<
     Readable,
@@ -151,5 +154,10 @@ class StreamSpeed extends EventEmitter {
     return `${prate + units.charAt(t2).replace(' ', '')}B${timeUnit}`;
   }
 }
+
+// Statically recognizable exports for Node.js cjs-module-lexer (ESM named import support)
+module.exports = StreamSpeed;
+module.exports.default = StreamSpeed;
+module.exports.StreamSpeed = StreamSpeed;
 
 export = StreamSpeed;

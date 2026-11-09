@@ -26,12 +26,6 @@ class StreamSpeed extends EventEmitter {
 
   /**
    * Emits speed for a group of streams.
-   *
-   * @constructor
-   * @extends {EventEmitter}
-   * @param {Object?} options
-   * @param {number?} options.timeUnit The time unit speed will be measured in.
-   * @param {number?} options.range Time in ms to calculate speed over.
    */
   constructor(options = {}) {
     super();
@@ -47,9 +41,6 @@ class StreamSpeed extends EventEmitter {
 
   /**
    * Updates the group with the latest change in speed.
-   *
-   * @param {Readable} origstream
-   * @param {number} speed
    */
   _update(origstream: Readable, speed: number) {
     for (const [stream, m] of this._streams) {
@@ -67,8 +58,6 @@ class StreamSpeed extends EventEmitter {
 
   /**
    * Convenient method that returns list of streams in this group.
-   *
-   * @return {Array.<Readable>}
    */
   getStreams() {
     return Array.from(this._streams.keys());
@@ -76,8 +65,6 @@ class StreamSpeed extends EventEmitter {
 
   /**
    * Add stream to group.
-   *
-   * @param {Readable} stream
    */
   add(origstream: Readable) {
     // Check if stream is already in group.
@@ -115,8 +102,6 @@ class StreamSpeed extends EventEmitter {
 
   /**
    * Remove stream from group.
-   *
-   * @param {Readable} stream
    */
   remove(stream: Readable) {
     // Check if stream is in group.
@@ -139,8 +124,6 @@ class StreamSpeed extends EventEmitter {
 
   /**
    * Get an individual stream's speed.
-   *
-   * @param {Readable} stream
    */
   getStreamSpeed(stream: Readable) {
     const meta = this._streams.get(stream);
@@ -153,12 +136,6 @@ class StreamSpeed extends EventEmitter {
   /**
    * Converts bytes to human readable unit.
    * Thank you Amir from StackOverflow.
-   *
-   * @param {number} bytes
-   * @param {Object} options
-   * @param {string} options.timeUnit
-   * @param {number?} options.precision
-   * @return {string}
    */
   static toHuman(bytes: number, options: StreamSpeed.ToHumanOptions = {}) {
     const units = ' KMGTPEZYXWVU';

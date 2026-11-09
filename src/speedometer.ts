@@ -14,11 +14,6 @@ export class Speedometer {
   private _lastSpeed: number;
   /**
    * Helps count the number of bytes per data event in streams.
-   *
-   * @constructor
-   * @param {Object?} options
-   * @param {number?} options.timeUnit
-   * @param {number?} options.range
    */
   constructor(options: Options) {
     this.options = options;
@@ -28,9 +23,6 @@ export class Speedometer {
 
   /**
    * Called when new data arrives.
-   *
-   * @param {Buffer|string} data
-   * @param {Function} callback
    */
   update(data: Buffer, callback: (speed: number) => void) {
     const now = Date.now();

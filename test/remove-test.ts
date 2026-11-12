@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { PassThrough } from 'node:stream';
 import sinon from 'sinon';
-import StreamSpeed from '..';
+import StreamSpeed from '../src';
 import MockStream from './mockstream';
 
 describe('Immediately remove a stream', () => {

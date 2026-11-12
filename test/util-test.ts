@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import StreamSpeed from '..';
+import StreamSpeed from '../src';
 
 describe('StreamSpeed.toHuman()', () => {
   it('Gives a unit to 0 bytes', () => {

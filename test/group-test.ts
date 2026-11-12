@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import sinon from 'sinon';
-import StreamSpeed from '..';
+import StreamSpeed from '../src';
 import MockStream from './mockstream';
 
 describe('Create a group and write to it', () => {

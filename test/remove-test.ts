@@ -10,6 +10,8 @@ describe('Immediately remove a stream', () => {
     const s = new PassThrough();
     ss.add(s);
     ss.remove(s);
+    assert.equal(s.listenerCount('end'), 0);
+    assert.equal(s.listenerCount('data'), 0);
 
     // Listen for things.
     const spy = sinon.spy();

@@ -84,11 +84,13 @@ class StreamSpeed extends EventEmitter {
     };
 
     const cleanup = () => {
+      origstream.unpipe(stream);
       stream.removeListener('readable', onReadable);
-      stream.removeListener('end', cleanup);
+      origstream.removeListener('end', onEnd);
       origstream.removeListener('error', cleanup);
       this._streams.delete(origstream);
     };
+    const onEnd = setImmediate.bind(null, cleanup);
 
     const reader = new Speedometer(this.options);
     const stream = origstream.pipe(new PassThrough());
@@ -99,7 +101,7 @@ class StreamSpeed extends EventEmitter {
     });
 
     stream.on('readable', onReadable);
-    origstream.on('end', setImmediate.bind(null, cleanup));
+    origstream.on('end', onEnd);
     origstream.on('error', cleanup);
   }
 
